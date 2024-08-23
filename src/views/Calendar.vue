@@ -3,7 +3,12 @@
     <div class="ui main container">
       <!-- 基本的なコンテンツはここに記載する -->
       <h1 class="ui dividing header">お酒カレンダー</h1>
-      <VDatePicker :attributes='attributes' :max-date="new Date()" v-model="date" class="custom-calendar"/>
+      <VDatePicker
+        :attributes="attributes"
+        :max-date="new Date()"
+        v-model="date"
+        class="custom-calendar"
+      />
     </div>
   </div>
 </template>
@@ -13,23 +18,23 @@
 // @は/srcの同じ意味です
 // import something from '@/components/something.vue';
 import { baseUrl } from "@/assets/config.js";
-import { Calendar, DatePicker } from 'v-calendar';
-import 'v-calendar/style.css';
+import { Calendar, DatePicker } from "v-calendar";
+import "v-calendar/style.css";
 const headers = { Authorization: "mtiToken" };
 
 export default {
-  name: "User",
+  name: "Calendar",
 
   components: {
     // 読み込んだコンポーネント名をここに記述する
-     Calendar,
-     DatePicker,
+    Calendar,
+    DatePicker,
   },
 
   data() {
     // Vue.jsで使う変数はここに記述する
     return {
-       date: new Date(),
+      date: new Date(),
     };
   },
 
@@ -111,5 +116,4 @@ export default {
   margin: 0 auto; /* 中央に配置 */
   font-size: 1.5em; /* フォントサイズを大きく設定 */
 }
-
 </style>

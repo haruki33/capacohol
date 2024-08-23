@@ -1,51 +1,51 @@
-import {createRouter, createWebHashHistory} from 'vue-router'
-import Home from '../views/Home.vue'
-import Login from '../views/Login.vue'
-import Profile from '../views/Profile.vue'
-import User from '../views/User.vue'
+import { createRouter, createWebHashHistory } from "vue-router";
+import Home from "../views/Home.vue";
+import Login from "../views/Login.vue";
+import Profile from "../views/Profile.vue";
+import Calendar from "../views/Calendar.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'Home',
+      path: "/",
+      name: "Home",
       component: Home,
       meta: {
-        title: 'アルコールの記録/キャパコール'
-      }
+        title: "アルコールの記録/キャパコール",
+      },
     },
     {
-      path: '/Login',
-      name: 'Login',
+      path: "/Login",
+      name: "Login",
       component: Login,
       meta: {
-        title: 'Login/キャパコール'
-      }
+        title: "Login/キャパコール",
+      },
     },
     {
-      path: '/Profile',
-      name: 'Profile',
+      path: "/Profile",
+      name: "Profile",
       component: Profile,
       meta: {
-        title: 'プロフィール/キャパコール'
-      }
+        title: "プロフィール/キャパコール",
+      },
     },
     {
-      path: '/User',
-      name: 'User',
-      component: User,
+      path: "/Calendar",
+      name: "Calendar",
+      component: Calendar,
       meta: {
-        title: 'カレンダー/キャパコール'
-      }
+        title: "カレンダー/キャパコール",
+      },
     },
-  ]
-})
+  ],
+});
 
-const DEFAULT_TITLE = 'TITLE';
+const DEFAULT_TITLE = "TITLE";
 
 router.afterEach((to) => {
-  document.title = to.meta.title ?? DEFAULT_TITLE
-})
+  document.title = to.meta.title ?? DEFAULT_TITLE;
+});
 
-export default router
+export default router;

@@ -1,16 +1,16 @@
 const { DynamoDBClient, QueryCommand } = require("@aws-sdk/client-dynamodb");
 const { marshall } = require("@aws-sdk/util-dynamodb");
 const client = new DynamoDBClient({ region: "ap-northeast-1" });
-const TableName = "team3_User";
-const crypto = require('crypto');
+const TableName = "User";
+const crypto = require("crypto");
 
 function sha256(message) {
   // SHA-256ハッシュ計算のためのハッシュオブジェクトを初期化する
-  const hash = crypto.createHash('sha256');
+  const hash = crypto.createHash("sha256");
   // ハッシュに入力データを供給する
   hash.update(message);
   // 16進数の文字列としてハッシュを完成させる
-  const hashHex = hash.digest('hex');
+  const hashHex = hash.digest("hex");
   // SHA-256ハッシュの16進数の文字列を返す
   return hashHex;
 }
