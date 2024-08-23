@@ -12,7 +12,7 @@ const router = createRouter({
       name: "Home",
       component: Home,
       meta: {
-        title: "register",
+        title: "アルコールの記録/キャパコール",
       },
     },
     {
@@ -20,7 +20,7 @@ const router = createRouter({
       name: "Login",
       component: Login,
       meta: {
-        title: "Login",
+        title: "Login/キャパコール",
       },
     },
     {
@@ -28,7 +28,7 @@ const router = createRouter({
       name: "Profile",
       component: Profile,
       meta: {
-        title: "Profile",
+        title: "プロフィール/キャパコール",
       },
     },
     {
@@ -36,7 +36,7 @@ const router = createRouter({
       name: "Calendar",
       component: Calendar,
       meta: {
-        title: "Calendar",
+        title: "カレンダー/キャパコール",
       },
     },
   ],
