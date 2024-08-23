@@ -39,7 +39,7 @@ lambda_deploy() {
     if [ $? -eq 0 ]; then
         # functionが存在している時
         echo "関数${funame}の内容を更新します"
-        # zip -r ${funame}.zip ${filename}
+        zip -r ${funame}.zip ${filename}
         aws lambda update-function-code  --function-name ${funame} \
         --zip-file fileb://${funame}.zip
         rm ${funame}.zip
@@ -47,7 +47,7 @@ lambda_deploy() {
     else
         # functionが存在していない時
         echo "関数${funame}のデプロイを開始します"
-        # zip -r ${funame}.zip ${filename}
+        zip -r ${funame}.zip ${filename}
         aws lambda create-function  --function-name ${funame} \
         --runtime nodejs20.x \
         --role arn:aws:iam::545009826298:role/exec_role \
@@ -73,7 +73,7 @@ lambda_deploy_all(){
 s3_deploy(){
     sudo yum -y install jq
     
-    bucket_name="${name}-internship"
+    bucket_name="test"
     
     policy=$(printf '{
         "Version": "2012-10-17",
@@ -104,7 +104,7 @@ s3_deploy(){
 
 s3_update(){
     npm run build
-    aws s3 cp ./dist s3://${name}-internship --recursive
+    aws s3 cp ./dist s3://test --recursive
 }
 
 deletename(){
