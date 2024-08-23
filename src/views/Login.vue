@@ -28,7 +28,11 @@
           <div class="field">
             <div class="ui left icon input">
               <i class="users icon"></i>
-              <input v-model="user.affilicationId" type="text" placeholder="affilicationId" />
+              <input
+                v-model="user.affilicationId"
+                type="text"
+                placeholder="affilicationId"
+              />
             </div>
           </div>
 
@@ -43,24 +47,30 @@
             </div>
           </div>
 
-          
-          
           <div class="field" v-if="!isLogin">
             <div class="field">
               <div class="ui left icon input">
                 <i class="beer icon"></i>
-                <input v-model="user.likeSake" type="text" placeholder="like sake" />
+                <input
+                  v-model="user.likeSake"
+                  type="text"
+                  placeholder="like sake"
+                />
               </div>
             </div>
-            
+
             <div class="ui left icon input">
               <i class="weight icon"></i>
-              <input v-model="user.weight" type="text" placeholder="weight [kg]" />
+              <input
+                v-model="user.weight"
+                type="text"
+                placeholder="weight [kg]"
+              />
             </div>
           </div>
 
           <button
-            class="ui huge green fluid button"
+            class="ui huge yellow fluid button"
             :disabled="isButtonDisabled"
             type="submit"
           >
@@ -115,7 +125,8 @@ export default {
 
     // 発展課題のボタン活性/非活性用
     isButtonDisabled() {
-      const { userId, affilicationId, password, likeSake, weight, image } = this.user;
+      const { userId, affilicationId, password, likeSake, weight, image } =
+        this.user;
       return this.isLogin
         ? !userId || !affilicationId || !password
         : !userId || !affilicationId || !password || !likeSake || !weight;
@@ -149,7 +160,7 @@ export default {
       this.isCallingApi = true;
 
       const path = this.isLogin ? "/user/login" : "/user/signup";
-      const {userId, affilicationId, password, likeSake, weight } = this.user;
+      const { userId, affilicationId, password, likeSake, weight } = this.user;
       const reqBody = this.isLogin
         ? { userId, password, affilicationId }
         : { userId, affilicationId, password, likeSake, weight };

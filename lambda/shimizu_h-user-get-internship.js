@@ -13,23 +13,24 @@ exports.handler = async (event, context) => {
     body: JSON.stringify({ message: "" }),
   };
 
-  if(event.headers.authorization !== "mtiToken"){
+  if (event.headers.authorization !== "mtiToken") {
     response.statusCode = 401;
     response.body = JSON.stringify({
       message: "認証されていません．headersにtokenを指定してください",
     });
-    
+
     return response;
   }
-  
+
   const userId = event.queryStringParameters?.userId; //見たいユーザのuserId
-  const affilicationId = event.queryStringParameters?.affilicationId; //見たいユーザのuserId
-  if(!userId){
+  const affilicationId = event.queryStringParameters?.affilicationId; //見たいユーザの所属Id
+  if (!userId) {
     response.statusCode = 400;
     response.body = JSON.stringify({
-      message: "無効なリクエストです．クエリストリングに必須パラメータをセットして下さい．",
+      message:
+        "無効なリクエストです．クエリストリングに必須パラメータをセットして下さい．",
     });
-    
+
     return response;
   }
 
@@ -47,17 +48,16 @@ exports.handler = async (event, context) => {
   //GetItemCommandの実行でDBからデータを取得
   try {
     const user = (await client.send(command)).Item;
-    if(!user){
+    if (!user) {
       throw new Error("指定のuserは見つかりませんでした．");
     }
     delete user?.password;
     response.body = JSON.stringify(unmarshall(user));
-    
   } catch (e) {
-    if(e.message == "指定のuserは見つかりませんでした．"){
+    if (e.message == "指定のuserは見つかりませんでした．") {
       response.statusCode = 404;
       response.body = JSON.stringify({ message: e.message });
-    } else{
+    } else {
       response.statusCode = 500;
       response.body = JSON.stringify({
         message: "予期せぬエラーが発生しました。",

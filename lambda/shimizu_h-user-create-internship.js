@@ -1,16 +1,20 @@
-const { DynamoDBClient, PutItemCommand, QueryCommand } = require("@aws-sdk/client-dynamodb");
+const {
+  DynamoDBClient,
+  PutItemCommand,
+  QueryCommand,
+} = require("@aws-sdk/client-dynamodb");
 const { marshall } = require("@aws-sdk/util-dynamodb");
 const client = new DynamoDBClient({ region: "ap-northeast-1" });
-const TableName = "team3_User";
-const crypto = require('crypto');
+const TableName = "User";
+const crypto = require("crypto");
 
 function sha256(message) {
   // SHA-256ハッシュ計算のためのハッシュオブジェクトを初期化する
-  const hash = crypto.createHash('sha256');
+  const hash = crypto.createHash("sha256");
   // ハッシュに入力データを供給する
   hash.update(message);
   // 16進数の文字列としてハッシュを完成させる
-  const hashHex = hash.digest('hex');
+  const hashHex = hash.digest("hex");
   // SHA-256ハッシュの16進数の文字列を返す
   return hashHex;
 }
@@ -26,7 +30,14 @@ exports.handler = async (event, context) => {
 
   const body = event.body ? JSON.parse(event.body) : null;
   console.log(body);
-  if (!body || !body.userId || !body.affilicationId || !body.password || !body.likeSake || !body.weight) {
+  if (
+    !body ||
+    !body.userId ||
+    !body.affilicationId ||
+    !body.password ||
+    !body.likeSake ||
+    !body.weight
+  ) {
     response.statusCode = 400;
     response.body = JSON.stringify({
       message:
@@ -51,8 +62,7 @@ exports.handler = async (event, context) => {
 
   // userIdが一致するデータを検索するコマンドを用意
   const serchCommand = new QueryCommand(serchParam);
-  
-  
+
   const param = {
     // ↓プロパティ名と変数名が同一の場合は、値の指定を省略できる。
     TableName, // TableName: TableNameと同じ意味
@@ -69,10 +79,10 @@ exports.handler = async (event, context) => {
 
   try {
     const count = (await client.send(serchCommand)).Count;
-    if (count){
+    if (count) {
       throw new Error("同じuserIdが登録されています．");
     }
-    
+
     await client.send(command);
     response.statusCode = 201;
     response.body = JSON.stringify({
@@ -83,9 +93,9 @@ exports.handler = async (event, context) => {
       token: "mtiToken",
     });
   } catch (e) {
-    if (e.message == "同じuserIdが登録されています．"){
-        response.statusCode = 409;
-        response.body = JSON.stringify({ message: e.message });
+    if (e.message == "同じuserIdが登録されています．") {
+      response.statusCode = 409;
+      response.body = JSON.stringify({ message: e.message });
     } else {
       response.statusCode = 500;
       response.body = JSON.stringify({
@@ -93,6 +103,6 @@ exports.handler = async (event, context) => {
         errorDetail: e.toString(),
       });
     }
-  };
+  }
   return response;
 };
