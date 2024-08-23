@@ -37,7 +37,7 @@
           active-class="active"
           class="item"
           exact
-          to="/calendar"
+          to="/Calendar"
           style="width: 100%; text-align: center"
         >
           <i class="calendar outline icon"></i>
