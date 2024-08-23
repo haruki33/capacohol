@@ -5,7 +5,7 @@ const {
 } = require("@aws-sdk/client-dynamodb");
 const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
 const client = new DynamoDBClient({ region: "ap-northeast-1" });
-const TableName = "team3_alcohol-record";
+const TableName = "alcoholRecord";
 
 exports.handler = async (event, context) => {
   const response = {
@@ -97,7 +97,9 @@ const createParam = (qs) => {
     queryParam.ExpressionAttributeValues[":affilicationId"] = affilicationId;
   }
 
-  queryParam.ExpressionAttributeValues = marshall(queryParam.ExpressionAttributeValues)
+  queryParam.ExpressionAttributeValues = marshall(
+    queryParam.ExpressionAttributeValues
+  );
 
   return {
     hasValidQs,

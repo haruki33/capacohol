@@ -97,7 +97,9 @@ const createParam = (qs) => {
     queryParam.ExpressionAttributeValues[":category"] = category;
   }
 
-  queryParam.ExpressionAttributeValues = marshall(queryParam.ExpressionAttributeValues)
+  queryParam.ExpressionAttributeValues = marshall(
+    queryParam.ExpressionAttributeValues
+  );
 
   return {
     hasValidQs,

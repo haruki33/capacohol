@@ -23,21 +23,17 @@
       </p>
 
       <h1 class="ui dividing header">アルコールの記録</h1>
-      
+
       <!-- お酒登録ボックス -->
       <div class="ui segment">
         <form class="ui form" @submit.prevent="postAlcohol">
           <div class="field">
             <label for="Date">日付</label>
-            <input
-              type="date"
-              id="Date"
-              name="Date"
-            />
+            <input type="date" id="Date" name="Date" />
           </div>
 
           <div class="inline field">
-            <label for="AlcoholContent">アルコール度数</label><br>
+            <label for="AlcoholContent">アルコール度数</label><br />
             <input
               v-model="post.alcoholContent"
               type="number"
@@ -48,7 +44,7 @@
           </div>
 
           <div class="inline field">
-            <label for="AlcoholQuantity">飲んだ量</label><br>
+            <label for="AlcoholQuantity">飲んだ量</label><br />
             <input
               v-model="post.alcoholQuantity"
               type="number"
@@ -57,9 +53,9 @@
               placeholder="ml"
             />
           </div>
-          
+
           <div class="inline field">
-            <label for="AlcoholNum">飲んだ本数</label><br>
+            <label for="AlcoholNum">飲んだ本数</label><br />
             <input
               v-model="post.alcoholNum"
               type="number"
@@ -67,17 +63,26 @@
               name="AlcoholNum"
               placeholder="本・缶・杯"
             />
-          </div>​
-          
-          <div class="inline field">
-            <label for="CurrentIntoxicationLevel">あなたの酔い度を選択してください</label>
-              <select id="CurrentIntoxicationLevel" v-model="post.currentIntoxicationLevel">
-                <option v-for="CurrentIntoxicationLevel in CurrentIntoxicationLevels" :value="CurrentIntoxicationLevel.value" :key="CurrentIntoxicationLevel.value">
-                  {{ CurrentIntoxicationLevel.text }}
-                </option>
-             </select>
           </div>
-          
+
+          <div class="inline field">
+            <label for="CurrentIntoxicationLevel"
+              >あなたの酔い度を選択してください</label
+            >
+            <select
+              id="CurrentIntoxicationLevel"
+              v-model="post.currentIntoxicationLevel"
+            >
+              <option
+                v-for="CurrentIntoxicationLevel in CurrentIntoxicationLevels"
+                :value="CurrentIntoxicationLevel.value"
+                :key="CurrentIntoxicationLevel.value"
+              >
+                {{ CurrentIntoxicationLevel.text }}
+              </option>
+            </select>
+          </div>
+
           <div class="right-align">
             <button
               class="ui green button"
@@ -90,32 +95,34 @@
         </form>
       </div>
 
-
       <!-- 飲酒履歴 -->
       <h3 class="ui dividing header">飲酒履歴</h3>
       <div class="ui segment">
         <ul class="ui comments divided alcohol-list">
-          <template v-for="(alcohol, index) in alcohols" :key="index">
+          <template v-for="(record, index) in records" :key="index">
             <li class="comment">
               <div class="content">
-                <span class="author">{{ alcohol.userId }}</span>
+                <span class="author">{{ record.userId }}</span>
                 <div class="metadata">
                   <span class="date">{{
-                    convertToLocaleString(alcohol.timestamp)
+                    convertToLocaleString(record.timestamp)
                   }}</span>
                 </div>
                 <button
-                  v-if="isMyAlcohol(alcohol.userId)"
+                  v-if="isMyAlcohol(record.userId)"
                   class="ui negative mini button right floated"
-                  @click="deleteAlcohol(alcohol)"
+                  @click="deleteAlcohol(record)"
                 >
                   削除
                 </button>
                 <p class="text">
-                  アルコール度数: {{ alcohol.alcoholContent }}%、 飲んだ量: {{ alcohol.alcoholQuantity }}ml、 本数: {{ alcohol.alcoholNum }} 
+                  アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
+                  {{ record.alcoholQuantity }}ml、 本数:
+                  {{ record.alcoholNum }}
                 </p>
                 <span class="ui green label">
-                  酔い度: {{ alcohol.currentIntoxicationLevel }}</span>
+                  酔い度: {{ record.currentIntoxicationLevel }}</span
+                >
                 <div class="ui divider"></div>
               </div>
             </li>
@@ -135,9 +142,9 @@ export default {
   data() {
     return {
       CurrentIntoxicationLevels: [
-        { value: '1', text: 'ほろ酔い' },
-        { value: '2', text: 'そこそこ酔い' },
-        { value: '3', text: 'マジ酔い' },
+        { value: "1", text: "ほろ酔い" },
+        { value: "2", text: "そこそこ酔い" },
+        { value: "3", text: "マジ酔い" },
       ],
       post: {
         alcoholContent: null,
@@ -145,29 +152,29 @@ export default {
         alcoholQuantity: null,
         currentIntoxicationLevel: null,
       },
-      alcohols: [],
+      records: [],
       iam: null,
       successMsg: "",
       errorMsg: "",
       isCallingApi: false,
     };
   },
-  
+
   computed: {
-    getToday(){
-          const today = new Date();
-          function dateFormat(today, format){
-            format = format.replace("YYYY", today.getFullYear());
-            format = format.replace("MM", ("0"+(today.getMonth() + 1)).slice(-2));
-            format = format.replace("DD", ("0"+ today.getDate()).slice(-2));
-            return format;
-          }
-          const data = dateFormat(today,'YYYY-MM-DD');
-          const field = document.date(dateに付与した任意ID);
-          field.value = data;
-          field.setAttribute("min", data);
-        },
-        
+    getToday() {
+      const today = new Date();
+      function dateFormat(today, format) {
+        format = format.replace("YYYY", today.getFullYear());
+        format = format.replace("MM", ("0" + (today.getMonth() + 1)).slice(-2));
+        format = format.replace("DD", ("0" + today.getDate()).slice(-2));
+        return format;
+      }
+      const data = dateFormat(today, "YYYY-MM-DD");
+      const field = document.date(dateに付与した任意ID);
+      field.value = data;
+      field.setAttribute("min", data);
+    },
+
     isPostButtonDisabled() {
       return (
         !this.post.alcoholContent ||
@@ -181,9 +188,11 @@ export default {
   created: async function () {
     if (
       window.localStorage.getItem("userId") &&
+      window.localStorage.getItem("affilicationId") &&
       window.localStorage.getItem("token")
     ) {
-      this.iam = window.localStorage.getItem("userId");
+      this.userId = window.localStorage.getItem("userId");
+      this.affilicationId = window.localStorage.getItem("affilicationId");
       await this.getAlcoholRecords();
     } else {
       window.localStorage.clear();
@@ -200,71 +209,75 @@ export default {
       }
     },
 
-    isMyAlcohol(id) {
-      return this.iam === id;
+    isMyAlcohol(userId) {
+      return this.userId === userId;
     },
 
     async getAlcoholRecords() {
+      if (this.isCallingApi) {
+        return;
+      }
       this.isCallingApi = true;
 
       try {
-        const res = await fetch(baseUrl + "/records", {
+        const res = await fetch(baseUrl + "/AlcoholIntakeRecords", {
           method: "GET",
           headers: {
-            'Authorization': 'mtiToken' // 適切なトークンを設定してください
-          }
+            Authorization: "mtiToken", // 適切なトークンを設定してください
+          },
         });
 
         const text = await res.text();
         const jsonData = text ? JSON.parse(text) : {};
 
         if (!res.ok) {
-          const errorMessage = jsonData.message ?? "エラーメッセージがありません";
+          const errorMessage =
+            jsonData.message ?? "エラーメッセージがありません";
           throw new Error(errorMessage);
         }
-        
-        this.alcohols = jsonData.alcohol ?? [];
-        
-        
+
+        this.records = jsonData.alcohol ?? [];
       } catch (e) {
         this.errorMsg = `飲酒記録取得時にエラーが発生しました: ${e.message}`;
       } finally {
         this.isCallingApi = false;
       }
     },
-    
+
     async postAlcohol() {
       if (this.isCallingApi) {
         return;
       }
       this.isCallingApi = true;
-    
+
       const reqBody = {
-        userId: this.iam,
+        userId: this.userId,
+        affilicationId: this.affilicationId,
         alcoholContent: this.post.alcoholContent,
         alcoholQuantity: this.post.alcoholQuantity,
         alcoholNum: this.post.alcoholNum,
-        currentIntoxicationLevel: this.post.currentIntoxicationLevel
+        currentIntoxicationLevel: this.post.currentIntoxicationLevel,
       };
-      
+
       try {
-        const res = await fetch(baseUrl + "/record", {
+        const res = await fetch(baseUrl + "/AlcoholIntakeRecords", {
           method: "POST",
           body: JSON.stringify(reqBody),
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'mtiToken' // ここを適切なトークンに変更
-          }
+            "Content-Type": "application/json",
+            Authorization: "mtiToken", // ここを適切なトークンに変更
+          },
         });
-    
+
         const jsonData = await res.json();
-    
+
         if (!res.ok) {
-          const errorMessage = jsonData.message ?? "エラーメッセージがありません";
+          const errorMessage =
+            jsonData.message ?? "エラーメッセージがありません";
           throw new Error(errorMessage);
         }
-    
-        this.alcohols.unshift({ ...reqBody, timestamp: Date.now() });
+
+        this.records.unshift({ ...reqBody, timestamp: Date.now() });
         this.successMsg = "お酒を登録出来ました！";
         this.post.alcoholContent = "";
         this.post.alcoholQuantity = "";
@@ -276,7 +289,7 @@ export default {
         this.isCallingApi = false;
       }
     },
-    
+
     async deleteAlcohol(alcohol) {
       if (this.isCallingApi) {
         return;
@@ -284,29 +297,29 @@ export default {
       this.isCallingApi = true;
 
       const { userId, timestamp } = alcohol;
+
       try {
         const res = await fetch(
-          `${baseUrl}/record?userId=${userId}&timestamp=${timestamp}`,
+          `${baseUrl}/AlcoholIntakeRecords?userId=${userId}&timestamp=${timestamp}`,
           {
             method: "DELETE",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${window.localStorage.getItem('token')}`
-            }
+              "Content-Type": "application/json",
+              Authorization: "mtiToken", // ここを適切なトークンに変更
+            },
           }
         );
 
-        const jsonData = await res.json();
-
         if (!res.ok) {
-          const errorMessage = jsonData.message ?? "エラーメッセージがありません";
+          const errorMessage =
+            jsonData.message ?? "エラーメッセージがありません";
           throw new Error(errorMessage);
         }
 
-        const deleted = this.alcohols.findIndex(
+        const deleted = this.records.findIndex(
           (a) => a.userId === userId && a.timestamp === timestamp
         );
-        this.alcohols.splice(deleted, 1);
+        this.records.splice(deleted, 1);
         this.successMsg = "履歴が削除されました！";
       } catch (e) {
         this.errorMsg = e.message;
