@@ -141,6 +141,8 @@ export default {
 
   data() {
     return {
+      userId: "",
+      affilicationId: "",
       CurrentIntoxicationLevels: [
         { value: "1", text: "ほろ酔い" },
         { value: "2", text: "そこそこ酔い" },
@@ -220,12 +222,15 @@ export default {
       this.isCallingApi = true;
 
       try {
-        const res = await fetch(baseUrl + "/AlcoholIntakeRecords", {
-          method: "GET",
-          headers: {
-            Authorization: "mtiToken", // 適切なトークンを設定してください
-          },
-        });
+        const res = await fetch(
+          `${baseUrl}/AlcoholIntakeRecords?userId=${this.userId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "mtiToken", // 適切なトークンを設定してください
+            },
+          }
+        );
 
         const text = await res.text();
         const jsonData = text ? JSON.parse(text) : {};
@@ -236,7 +241,7 @@ export default {
           throw new Error(errorMessage);
         }
 
-        this.records = jsonData.alcohol ?? [];
+        this.records = jsonData.records ?? [];
       } catch (e) {
         this.errorMsg = `飲酒記録取得時にエラーが発生しました: ${e.message}`;
       } finally {

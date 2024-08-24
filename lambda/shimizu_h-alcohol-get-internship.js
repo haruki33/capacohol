@@ -27,82 +27,131 @@ exports.handler = async (event, context) => {
     return response;
   }
 
-  const { hasValidQs, param } = createParam(event.queryStringParameters);
+  const userId = event.queryStringParameters?.userId; //見たいユーザのuserId
+  // const affilicationId = event.queryStringParameters?.affilicationId; //見たいユーザの所属Id
 
-  const queryCommnad = new QueryCommand(param);
-  const scanCommand = new ScanCommand(param);
-  try {
-    const alcohols = hasValidQs
-      ? (await client.send(queryCommnad)).Items
-      : (await client.send(scanCommand)).Items;
-
-    if (alcohols.length == 0) {
-      response.body = JSON.stringify({ alcohols: [] });
-    } else {
-      const unmarshalledAlcohols = alcohols.map((item) => unmarshall(item));
-      unmarshalledAlcohols.sort((a, b) => b.timestamp - a.timestamp);
-      response.body = JSON.stringify({ alcohol: unmarshalledAlcohols });
-    }
-  } catch (e) {
-    response.statusCode = 500;
+  if (!userId) {
+    response.statusCode = 400;
     response.body = JSON.stringify({
-      message: "予期せぬエラーが発生しました。",
-      errorDetail: e.toString(),
+      message:
+        "無効なリクエストです．クエリストリングに必須パラメータをセットして下さい．",
     });
+
+    return response;
   }
 
+  const param = {
+    TableName,
+    //キー、インデックスによる検索の定義
+    KeyConditionExpression: "userId = :uid",
+    //プライマリーキー以外の属性でのフィルタ
+    // FilterExpression: "affilicationId = :pkey",
+    //検索値のプレースホルダの定義
+    ExpressionAttributeValues: marshall({
+      ":uid": userId,
+      // ":pkey": affilicationId,
+    }),
+  };
+
+  const command = new QueryCommand(param);
+  try {
+    const records = (await client.send(command))?.Items;
+    if (records.length === 0) {
+      throw new Error("飲酒履歴がありません");
+    }
+    const unmarshallrecords = records.map((item) => unmarshall(item));
+    response.body = JSON.stringify({ records: unmarshallrecords });
+  } catch (e) {
+    if (e.message == "飲酒履歴がありません") {
+      response.statusCode = 204;
+      response.body = JSON.stringify({ message: e.message });
+    } else {
+      response.statusCode = 500;
+      response.body = JSON.stringify({
+        message: "予期せぬエラーが発生しました。",
+        errorDetail: e.toString(),
+      });
+    }
+  }
   return response;
 };
 
-// qsの内容に応じて、Paramを作成する。
-const createParam = (qs) => {
-  // Query操作には、パーティションキーは必須であり、他は任意となる。
-  // そのためuserIdさえあれば、有効となる。
-  const hasValidQs = qs?.userId;
-  if (!hasValidQs) {
-    return {
-      hasValidQs,
-      param: {
-        // ↓プロパティ名と変数名が同一の場合は、値の指定を省略できる。
-        TableName, // TableName: TableNameと同じ意味
-        Limit: 100,
-      },
-    };
-  }
+//------------------------------------------------------
+//   const { hasValidQs, param } = createParam(event.queryStringParameters);
 
-  const { userId, start, end, affilicationId } = qs;
+//   const queryCommnad = new QueryCommand(param);
+//   // const scanCommand = new ScanCommand(param);
+//   try {
+//     const alcohols = hasValidQs
+//       ? (await client.send(queryCommnad)).Items
+//       : (await client.send(scanCommand)).Items;
 
-  const queryParam = {
-    TableName, // TableName: TableNameと同じ意味
-    Limit: 100,
+//     if (alcohols.length == 0) {
+//       response.body = JSON.stringify({ alcohols: [] });
+//     } else {
+//       const unmarshalledAlcohols = alcohols.map((item) => unmarshall(item));
+//       unmarshalledAlcohols.sort((a, b) => b.timestamp - a.timestamp);
+//       response.body = JSON.stringify({ alcohol: unmarshalledAlcohols });
+//     }
+//   } catch (e) {
+//     response.statusCode = 500;
+//     response.body = JSON.stringify({
+//       message: "予期せぬエラーが発生しました。",
+//       errorDetail: e.toString(),
+//     });
+//   }
 
-    // 一つのキーに複数の条件をつけることはできないため、BETWEEN演算を利用する
-    KeyConditionExpression: "userId = :uid and #ts BETWEEN :start AND :end",
-    // timestampは予約後であるため、プレースホルダ経由じゃないと指定できない。
-    ExpressionAttributeNames: {
-      "#ts": "timestamp",
-    },
-    ExpressionAttributeValues: {
-      ":uid": userId,
-      // startが無効な場合は、0以上という条件にすることで、実質フィルタリング無効化
-      ":start": Number.isNaN(parseInt(start)) ? 0 : parseInt(start),
-      // endが無効な場合は、現在時刻以下という条件にすることで、実質フィルタリング無効化
-      ":end": Number.isNaN(parseInt(end)) ? Date.now() : parseInt(end),
-    },
-  };
+//   return response;
+// };
 
-  // affilicationIdが存在する場合は別途該当のプロパティを追加する。
-  if (affilicationId) {
-    queryParam.FilterExpression = "affilicationId = :affilicationId";
-    queryParam.ExpressionAttributeValues[":affilicationId"] = affilicationId;
-  }
+// // qsの内容に応じて、Paramを作成する。
+// const createParam = (qs) => {
+//   // Query操作には、パーティションキーは必須であり、他は任意となる。
+//   // そのためuserIdさえあれば、有効となる。
+//   const hasValidQs = qs?.userId; //userIdがあれば格納
+//   if (!hasValidQs) {
+//     return {
+//       hasValidQs,
+//       param: {
+//         // ↓プロパティ名と変数名が同一の場合は、値の指定を省略できる。
+//         TableName, // TableName: TableNameと同じ意味
+//         Limit: 100,
+//       },
+//     };
+//   }
 
-  queryParam.ExpressionAttributeValues = marshall(
-    queryParam.ExpressionAttributeValues
-  );
+//   const { userId, start, end, affilicationId } = qs; //userIdがあればそれぞれに格納
 
-  return {
-    hasValidQs,
-    param: queryParam,
-  };
-};
+//   const queryParam = {
+//     TableName, // TableName: TableNameと同じ意味
+//     Limit: 100,
+
+//     // 一つのキーに複数の条件をつけることはできないため、BETWEEN演算を利用する
+//     KeyConditionExpression: "userId = :uid and #ts BETWEEN :start AND :end",
+//     // timestampは予約後であるため、プレースホルダ経由じゃないと指定できない。dense
+//     ExpressionAttributeNames: {
+//       "#ts": "timestamp",
+//     },
+//     ExpressionAttributeValues: {
+//       ":uid": userId,
+//       // startが無効な場合は、0以上という条件にすることで、実質フィルタリング無効化
+//       ":start": Number.isNaN(parseInt(start)) ? 0 : parseInt(start),
+//       // endが無効な場合は、現在時刻以下という条件にすることで、実質フィルタリング無効化
+//       ":end": Number.isNaN(parseInt(end)) ? Date.now() : parseInt(end),
+//     },
+//   };
+
+//   // affilicationIdが存在する場合は別途該当のプロパティを追加する。
+//   if (affilicationId) {
+//     queryParam.FilterExpression = "affilicationId = :affilicationId";
+//     queryParam.ExpressionAttributeValues[":affilicationId"] = affilicationId;
+//   }
+
+//   queryParam.ExpressionAttributeValues = marshall(
+//     queryParam.ExpressionAttributeValues
+//   );
+
+//   return {
+//     hasValidQs,
+//     param: queryParam,
+//   };
