@@ -443,4 +443,8 @@ export default {
 
 <style scoped>
 /* このコンポーネントだけに適用するCSSはここに記述する */
+.ui.main.container {
+  margin-bottom: 100px; /* メニューバーの高さと同じ値に設定 */
+  padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
+}
 </style>

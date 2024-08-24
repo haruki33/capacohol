@@ -102,6 +102,8 @@ export default {
   padding: 20px;
   transition: all 0.2s;
   text-align: center;
+  margin-bottom: 100px; /* メニューバーの高さと同じ値に設定 */
+  padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
 }
 
 .ui.main.container h1 {
