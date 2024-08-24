@@ -25,6 +25,7 @@ exports.handler = async (event, context) => {
   const {
     userId,
     affilicationId,
+    date,
     alcoholContent,
     alcoholQuantity,
     alcoholNum,
@@ -38,11 +39,12 @@ exports.handler = async (event, context) => {
     Item: marshall({
       userId, // userId: userIdと同じ意味
       affilicationId,
+      date, // 飲酒日時
       alcoholContent,
       alcoholQuantity,
       alcoholNum,
       currentIntoxicationLevel,
-      timestamp, // timestamp: timestampと同じ意味
+      timestamp, // 登録したタイムスタンプ
     }),
   };
 
@@ -54,6 +56,7 @@ exports.handler = async (event, context) => {
     response.body = JSON.stringify({
       userId,
       affilicationId,
+      date,
       alcoholContent,
       alcoholQuantity,
       alcoholNum,

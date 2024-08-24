@@ -26,10 +26,16 @@
 
       <!-- お酒登録ボックス -->
       <div class="ui segment">
-        <form class="ui form" @submit.prevent="postAlcohol">
+        <form class="ui form" @submit.prevent="postRecord">
           <div class="field">
             <label for="Date">日付</label>
-            <input type="date" id="Date" name="Date" />
+            <input
+              v-model="post.date"
+              type="date"
+              id="Date"
+              name="Date"
+              placeholder="日時"
+            />
           </div>
 
           <div class="inline field">
@@ -149,6 +155,7 @@ export default {
         { value: "3", text: "マジ酔い" },
       ],
       post: {
+        date: null,
         alcoholContent: null,
         alcoholNum: null,
         alcoholQuantity: null,
@@ -162,20 +169,26 @@ export default {
     };
   },
 
+  mounted() {
+    // 今日の日付をYYYY-MM-DD形式で取得
+    const today = new Date().toISOString().slice(0, 10);
+    this.post.date = today;
+  },
+
   computed: {
-    getToday() {
-      const today = new Date();
-      function dateFormat(today, format) {
-        format = format.replace("YYYY", today.getFullYear());
-        format = format.replace("MM", ("0" + (today.getMonth() + 1)).slice(-2));
-        format = format.replace("DD", ("0" + today.getDate()).slice(-2));
-        return format;
-      }
-      const data = dateFormat(today, "YYYY-MM-DD");
-      const field = document.date(dateに付与した任意ID);
-      field.value = data;
-      field.setAttribute("min", data);
-    },
+    // getToday() {
+    //   const today = new Date();
+    //   function dateFormat(today, format) {
+    //     format = format.replace("YYYY", today.getFullYear());
+    //     format = format.replace("MM", ("0" + (today.getMonth() + 1)).slice(-2));
+    //     format = format.replace("DD", ("0" + today.getDate()).slice(-2));
+    //     return format;
+    //   }
+    //   const data = dateFormat(today, "YYYY-MM-DD");
+    //   const field = document.date(dateに付与した任意ID);
+    //   field.value = data;
+    //   field.setAttribute("min", data);
+    // },
 
     isPostButtonDisabled() {
       return (
@@ -249,7 +262,7 @@ export default {
       }
     },
 
-    async postAlcohol() {
+    async postRecord() {
       if (this.isCallingApi) {
         return;
       }
@@ -258,6 +271,7 @@ export default {
       const reqBody = {
         userId: this.userId,
         affilicationId: this.affilicationId,
+        date: this.post.date,
         alcoholContent: this.post.alcoholContent,
         alcoholQuantity: this.post.alcoholQuantity,
         alcoholNum: this.post.alcoholNum,
@@ -341,12 +355,6 @@ export default {
 </script>
 
 <style scoped>
-.article-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-width: 100%;
-}
 .right-align {
   text-align: right;
 }
@@ -368,5 +376,8 @@ export default {
 .ui.main.container {
   margin-bottom: 100px; /* メニューバーの高さと同じ値に設定 */
   padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
+}
+.ui.comments.divided.alcohol-list {
+  list-style-type: none;
 }
 </style>
