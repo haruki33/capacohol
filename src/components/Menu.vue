@@ -91,6 +91,7 @@ export default {
 
 <style scoped>
 .ui.secondary.pointing.menu {
+  height: 100px;
   z-index: 1000; /* 必要に応じて値を調整してください */
 }
 .item {
@@ -100,8 +101,5 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 2rem; /* アイコンのサイズを大きくします */
-}
-.ui.main.container {
-  margin-bottom: 120px; /* ナビゲーションバーの高さと同じ値に設定 */
 }
 </style>

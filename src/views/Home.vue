@@ -365,4 +365,8 @@ export default {
   text-align: left;
   width: 300px;
 }
+.ui.main.container {
+  margin-bottom: 100px; /* メニューバーの高さと同じ値に設定 */
+  padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
+}
 </style>
