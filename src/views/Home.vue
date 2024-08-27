@@ -22,22 +22,12 @@
         {{ successMsg }}
       </p>
 
-      <h1 class="ui dividing header">アルコールの記録</h1>
+      <h1 class="ui header">{{ post.date }}</h1>
 
       <!-- お酒登録ボックス -->
+      <h3 class="ui dividing header">飲酒記録</h3>
       <div class="ui segment">
         <form class="ui form" @submit.prevent="postRecord">
-          <div class="field">
-            <label for="Date">日付</label>
-            <input
-              v-model="post.date"
-              type="date"
-              id="Date"
-              name="Date"
-              placeholder="日時"
-            />
-          </div>
-
           <div class="inline field">
             <label for="AlcoholContent">アルコール度数</label><br />
             <input
@@ -74,7 +64,7 @@
           <div class="inline field">
             <label for="CurrentIntoxicationLevel"
               >あなたの酔い度を選択してください</label
-            >
+            ><br />
             <select
               id="CurrentIntoxicationLevel"
               v-model="post.currentIntoxicationLevel"
@@ -108,12 +98,12 @@
           <template v-for="(record, index) in records" :key="index">
             <li class="comment">
               <div class="content">
-                <span class="author">{{ record.userId }}</span>
-                <div class="metadata">
+                <!-- <span class="author">{{ record.userId }}</span> -->
+                <!--<div class="metadata">
                   <span class="date">{{
                     convertToLocaleString(record.timestamp)
                   }}</span>
-                </div>
+                </div> -->
                 <button
                   v-if="isMyAlcohol(record.userId)"
                   class="ui negative mini button right floated"
@@ -162,7 +152,6 @@ export default {
         currentIntoxicationLevel: null,
       },
       records: [],
-      iam: null,
       successMsg: "",
       errorMsg: "",
       isCallingApi: false,
@@ -236,7 +225,7 @@ export default {
 
       try {
         const res = await fetch(
-          `${baseUrl}/AlcoholIntakeRecords?userId=${this.userId}`,
+          `${baseUrl}/AlcoholIntakeRecords?userId=${this.userId}&date=${this.post.date}`,
           {
             method: "GET",
             headers: {
@@ -348,7 +337,8 @@ export default {
     },
 
     convertToLocaleString(timestamp) {
-      return new Date(timestamp).toLocaleString();
+      const dt_object = datetime.fromtimestamp(timestamp);
+      return dt_object.strftime("%H:%M");
     },
   },
 };
@@ -357,10 +347,6 @@ export default {
 <style scoped>
 .right-align {
   text-align: right;
-}
-.date {
-  text-align: left;
-  width: 150px;
 }
 .alcoholContent {
   width: 150px;
@@ -379,5 +365,6 @@ export default {
 }
 .ui.comments.divided.alcohol-list {
   list-style-type: none;
+  width: 650px;
 }
 </style>

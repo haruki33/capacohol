@@ -28,7 +28,7 @@ exports.handler = async (event, context) => {
   }
 
   const userId = event.queryStringParameters?.userId; //見たいユーザのuserId
-  // const affilicationId = event.queryStringParameters?.affilicationId; //見たいユーザの所属Id
+  const d = event.queryStringParameters?.date; //見たいユーザの所属Id
 
   if (!userId) {
     response.statusCode = 400;
@@ -44,12 +44,14 @@ exports.handler = async (event, context) => {
     TableName,
     //キー、インデックスによる検索の定義
     KeyConditionExpression: "userId = :uid",
-    //プライマリーキー以外の属性でのフィルタ
-    // FilterExpression: "affilicationId = :pkey",
+    FilterExpression: "#d = :datestr",
+    ExpressionAttributeNames: {
+      "#d": "date",
+    },
     //検索値のプレースホルダの定義
     ExpressionAttributeValues: marshall({
       ":uid": userId,
-      // ":pkey": affilicationId,
+      ":datestr": d,
     }),
   };
 
