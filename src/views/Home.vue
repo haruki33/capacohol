@@ -22,16 +22,12 @@
         {{ successMsg }}
       </p>
 
-      <h1 class="ui dividing header">アルコールの記録</h1>
+      <h1 class="ui header">{{ post.date }}</h1>
 
       <!-- お酒登録ボックス -->
+      <h3 class="ui dividing header">飲酒記録</h3>
       <div class="ui segment">
-        <form class="ui form" @submit.prevent="postAlcohol">
-          <div class="field">
-            <label for="Date">日付</label>
-            <input type="date" id="Date" name="Date" />
-          </div>
-
+        <form class="ui form" @submit.prevent="postRecord">
           <div class="inline field">
             <label for="AlcoholContent">アルコール度数</label><br />
             <input
@@ -68,7 +64,7 @@
           <div class="inline field">
             <label for="CurrentIntoxicationLevel"
               >あなたの酔い度を選択してください</label
-            >
+            ><br />
             <select
               id="CurrentIntoxicationLevel"
               v-model="post.currentIntoxicationLevel"
@@ -102,12 +98,12 @@
           <template v-for="(record, index) in records" :key="index">
             <li class="comment">
               <div class="content">
-                <span class="author">{{ record.userId }}</span>
-                <div class="metadata">
+                <!-- <span class="author">{{ record.userId }}</span> -->
+                <!--<div class="metadata">
                   <span class="date">{{
                     convertToLocaleString(record.timestamp)
                   }}</span>
-                </div>
+                </div> -->
                 <button
                   v-if="isMyAlcohol(record.userId)"
                   class="ui negative mini button right floated"
@@ -149,33 +145,39 @@ export default {
         { value: "3", text: "マジ酔い" },
       ],
       post: {
+        date: null,
         alcoholContent: null,
         alcoholNum: null,
         alcoholQuantity: null,
         currentIntoxicationLevel: null,
       },
       records: [],
-      iam: null,
       successMsg: "",
       errorMsg: "",
       isCallingApi: false,
     };
   },
 
+  mounted() {
+    // 今日の日付をYYYY-MM-DD形式で取得
+    const today = new Date().toISOString().slice(0, 10);
+    this.post.date = today;
+  },
+
   computed: {
-    getToday() {
-      const today = new Date();
-      function dateFormat(today, format) {
-        format = format.replace("YYYY", today.getFullYear());
-        format = format.replace("MM", ("0" + (today.getMonth() + 1)).slice(-2));
-        format = format.replace("DD", ("0" + today.getDate()).slice(-2));
-        return format;
-      }
-      const data = dateFormat(today, "YYYY-MM-DD");
-      const field = document.date(dateに付与した任意ID);
-      field.value = data;
-      field.setAttribute("min", data);
-    },
+    // getToday() {
+    //   const today = new Date();
+    //   function dateFormat(today, format) {
+    //     format = format.replace("YYYY", today.getFullYear());
+    //     format = format.replace("MM", ("0" + (today.getMonth() + 1)).slice(-2));
+    //     format = format.replace("DD", ("0" + today.getDate()).slice(-2));
+    //     return format;
+    //   }
+    //   const data = dateFormat(today, "YYYY-MM-DD");
+    //   const field = document.date(dateに付与した任意ID);
+    //   field.value = data;
+    //   field.setAttribute("min", data);
+    // },
 
     isPostButtonDisabled() {
       return (
@@ -223,7 +225,7 @@ export default {
 
       try {
         const res = await fetch(
-          `${baseUrl}/AlcoholIntakeRecords?userId=${this.userId}`,
+          `${baseUrl}/AlcoholIntakeRecords?userId=${this.userId}&date=${this.post.date}`,
           {
             method: "GET",
             headers: {
@@ -249,7 +251,7 @@ export default {
       }
     },
 
-    async postAlcohol() {
+    async postRecord() {
       if (this.isCallingApi) {
         return;
       }
@@ -258,6 +260,7 @@ export default {
       const reqBody = {
         userId: this.userId,
         affilicationId: this.affilicationId,
+        date: this.post.date,
         alcoholContent: this.post.alcoholContent,
         alcoholQuantity: this.post.alcoholQuantity,
         alcoholNum: this.post.alcoholNum,
@@ -334,25 +337,16 @@ export default {
     },
 
     convertToLocaleString(timestamp) {
-      return new Date(timestamp).toLocaleString();
+      const dt_object = datetime.fromtimestamp(timestamp);
+      return dt_object.strftime("%H:%M");
     },
   },
 };
 </script>
 
 <style scoped>
-.article-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  max-width: 100%;
-}
 .right-align {
   text-align: right;
-}
-.date {
-  text-align: left;
-  width: 150px;
 }
 .alcoholContent {
   width: 150px;
@@ -368,5 +362,9 @@ export default {
 .ui.main.container {
   margin-bottom: 100px; /* メニューバーの高さと同じ値に設定 */
   padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
+}
+.ui.comments.divided.alcohol-list {
+  list-style-type: none;
+  width: 650px;
 }
 </style>
