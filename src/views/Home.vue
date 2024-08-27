@@ -158,27 +158,12 @@ export default {
     };
   },
 
-  mounted() {
-    // 今日の日付をYYYY-MM-DD形式で取得
-    const today = new Date().toISOString().slice(0, 10);
-    this.post.date = today;
+  async mounted() {
+    this.setDate();
+    await this.getRecords();
   },
 
   computed: {
-    // getToday() {
-    //   const today = new Date();
-    //   function dateFormat(today, format) {
-    //     format = format.replace("YYYY", today.getFullYear());
-    //     format = format.replace("MM", ("0" + (today.getMonth() + 1)).slice(-2));
-    //     format = format.replace("DD", ("0" + today.getDate()).slice(-2));
-    //     return format;
-    //   }
-    //   const data = dateFormat(today, "YYYY-MM-DD");
-    //   const field = document.date(dateに付与した任意ID);
-    //   field.value = data;
-    //   field.setAttribute("min", data);
-    // },
-
     isPostButtonDisabled() {
       return (
         !this.post.alcoholContent ||
@@ -187,21 +172,6 @@ export default {
         !this.post.currentIntoxicationLevel
       );
     },
-  },
-
-  created: async function () {
-    if (
-      window.localStorage.getItem("userId") &&
-      window.localStorage.getItem("affilicationId") &&
-      window.localStorage.getItem("token")
-    ) {
-      this.userId = window.localStorage.getItem("userId");
-      this.affilicationId = window.localStorage.getItem("affilicationId");
-      await this.getAlcoholRecords();
-    } else {
-      window.localStorage.clear();
-      this.$router.push({ name: "Login" });
-    }
   },
 
   methods: {
@@ -339,6 +309,34 @@ export default {
     convertToLocaleString(timestamp) {
       const dt_object = datetime.fromtimestamp(timestamp);
       return dt_object.strftime("%H:%M");
+    },
+
+    setDate() {
+      // 今日の日付をYYYY-MM-DD形式で取得
+      const today = new Date().toISOString().slice(0, 10);
+      this.post.date = today;
+    },
+
+    checkLocalStrage() {
+      const userId = window.localStorage.getItem("userId");
+      const affilicationId = window.localStorage.getItem("affilicationId");
+      const token = window.localStorage.getItem("token");
+
+      if (userId && affilicationId && token) {
+        this.userId = window.localStorage.getItem("userId");
+        this.affilicationId = window.localStorage.getItem("affilicationId");
+        return true;
+      }
+      return false;
+    },
+
+    async getRecords() {
+      if (this.checkLocalStrage()) {
+        await this.getAlcoholRecords();
+      } else {
+        window.localStorage.clear();
+        this.$router.push({ name: "Login" });
+      }
     },
   },
 };
