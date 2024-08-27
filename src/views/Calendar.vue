@@ -3,12 +3,51 @@
     <div class="ui main container">
       <!-- 基本的なコンテンツはここに記載する -->
       <h1 class="ui dividing header">お酒カレンダー</h1>
-      <VDatePicker
-        :attributes="attributes"
-        :max-date="new Date()"
-        v-model="date"
-        class="custom-calendar"
-      />
+      <div class="ui one column grid" style="width: 100%; margin: 0">
+        <div
+          class="column"
+          style="
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <VDatePicker
+            class="cal"
+            v-model.string="selectedDate"
+            :masks="masks"
+          />
+        </div>
+
+        <h3 class="ui dividing header">{{ selectedDate }} の飲酒記録</h3>
+        <div class="ui segment">
+          <ul class="ui comments divided alcohol-list">
+            <template v-for="(record, index) in records" :key="index">
+              <li class="comment">
+                <div class="content">
+                  <button
+                    v-if="isMyAlcohol(record.userId)"
+                    class="ui negative mini button right floated"
+                    @click="deleteAlcohol(record)"
+                  >
+                    削除
+                  </button>
+                  <p class="text">
+                    アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
+                    {{ record.alcoholQuantity }}ml、 本数:
+                    {{ record.alcoholNum }}
+                  </p>
+                  <span class="ui green label">
+                    酔い度: {{ record.currentIntoxicationLevel }}</span
+                  >
+                  <div class="ui divider"></div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -18,8 +57,9 @@
 // @は/srcの同じ意味です
 // import something from '@/components/something.vue';
 import { baseUrl } from "@/assets/config.js";
-import { Calendar, DatePicker } from "v-calendar";
+import { Calendar } from "v-calendar";
 import "v-calendar/style.css";
+import { ref } from "vue";
 const headers = { Authorization: "mtiToken" };
 
 export default {
@@ -28,68 +68,91 @@ export default {
   components: {
     // 読み込んだコンポーネント名をここに記述する
     Calendar,
-    DatePicker,
   },
 
   data() {
     // Vue.jsで使う変数はここに記述する
+
     return {
-      date: new Date(),
+      selectedDate: null,
+      masks: ref({ modelValue: "YYYY-MM-DD" }),
+      records: [],
     };
   },
 
-  computed: {
-    // 計算した結果を変数として利用したいときはここに記述する
-    filteredUsers() {
-      return this.users.filter((e) => {
-        // nicknameのマッチングチェック
-        const matchNickname = this.nickname
-          ? e.nickname?.match(this.nickname)
-          : true;
+  async mounted() {
+    this.setDate();
+    console.log(this.selectedDate);
 
-        // ageの範囲チェック
-        const withinAgeRange =
-          (this.start ? e.age >= this.start : true) &&
-          (this.end ? e.age <= this.end : true);
-
-        return matchNickname && withinAgeRange;
-      });
-    },
+    await this.getRecords();
   },
 
   methods: {
-    // Vue.jsで使う関数はここで記述する
-    // 発展課題のエラーメッセージ用
-    clearError() {
-      this.errorMsg = "";
+    setDate() {
+      // 今日の日付をYYYY-MM-DD形式で取得
+      const today = new Date().toISOString().slice(0, 10);
+      this.selectedDate = today;
     },
-  },
 
-  created: async function () {
-    this.isCallingApi = true;
+    isMyAlcohol(userId) {
+      return this.userId === userId;
+    },
 
-    try {
-      /* global fetch */
-      const res = await fetch(baseUrl + "/users", {
-        method: "GET",
-        headers,
-      });
+    checkLocalStrage() {
+      const userId = window.localStorage.getItem("userId");
+      const affilicationId = window.localStorage.getItem("affilicationId");
+      const token = window.localStorage.getItem("token");
 
-      const text = await res.text();
-      const jsonData = text ? JSON.parse(text) : {};
-
-      // fetchではネットワークエラー以外のエラーはthrowされないため、明示的にthrowする
-      if (!res.ok) {
-        const errorMessage = jsonData.message ?? "エラーメッセージがありません";
-        throw new Error(errorMessage);
+      if (userId && affilicationId && token) {
+        this.userId = window.localStorage.getItem("userId");
+        this.affilicationId = window.localStorage.getItem("affilicationId");
+        return true;
       }
+      return false;
+    },
 
-      this.users = jsonData.users ?? [];
-    } catch (e) {
-      this.errorMsg = `ユーザーリスト取得時にエラーが発生しました: ${e}`;
-    } finally {
-      this.isCallingApi = false;
-    }
+    async getAlcoholRecords() {
+      if (this.isCallingApi) {
+        return;
+      }
+      this.isCallingApi = true;
+
+      try {
+        const res = await fetch(
+          `${baseUrl}/AlcoholIntakeRecords?userId=${this.userId}&date=${this.selectedDate}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: "mtiToken", // 適切なトークンを設定してください
+            },
+          }
+        );
+
+        const text = await res.text();
+        const jsonData = text ? JSON.parse(text) : {};
+
+        if (!res.ok) {
+          const errorMessage =
+            jsonData.message ?? "エラーメッセージがありません";
+          throw new Error(errorMessage);
+        }
+
+        this.records = jsonData.records ?? [];
+      } catch (e) {
+        this.errorMsg = `飲酒記録取得時にエラーが発生しました: ${e.message}`;
+      } finally {
+        this.isCallingApi = false;
+      }
+    },
+
+    async getRecords() {
+      if (this.checkLocalStrage()) {
+        await this.getAlcoholRecords();
+      } else {
+        window.localStorage.clear();
+        this.$router.push({ name: "Login" });
+      }
+    },
   },
 };
 </script>
@@ -117,5 +180,14 @@ export default {
   max-width: 800px; /* 最大幅を800pxに設定 */
   margin: 0 auto; /* 中央に配置 */
   font-size: 1.5em; /* フォントサイズを大きく設定 */
+}
+
+.cal {
+  width: 100%;
+  margin: 0;
+}
+
+.ui.comments.divided.alcohol-list {
+  list-style-type: none;
 }
 </style>

@@ -98,12 +98,6 @@
           <template v-for="(record, index) in records" :key="index">
             <li class="comment">
               <div class="content">
-                <!-- <span class="author">{{ record.userId }}</span> -->
-                <!--<div class="metadata">
-                  <span class="date">{{
-                    convertToLocaleString(record.timestamp)
-                  }}</span>
-                </div> -->
                 <button
                   v-if="isMyAlcohol(record.userId)"
                   class="ui negative mini button right floated"
@@ -363,6 +357,5 @@ export default {
 }
 .ui.comments.divided.alcohol-list {
   list-style-type: none;
-  width: 650px;
 }
 </style>
