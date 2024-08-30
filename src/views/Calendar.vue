@@ -9,28 +9,32 @@
 
       <!-- 履歴標示 -->
       <div class="ui segment record">
-        <div class="ui comments">
-          <h3 class="ui dividing header">{{ selectedDate }} の飲酒記録</h3>
-          <template v-for="(record, index) in records" :key="index">
-            <div class="ui comment">
-              <div class="content">
-                <button
-                  v-if="isMyAlcohol(record.userId)"
-                  class="ui negative mini button right floated"
-                  @click="deleteAlcohol(record)"
-                >
-                  削除
-                </button>
-                <p class="text">
-                  アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
-                  {{ record.alcoholQuantity }}ml、 本数:
-                  {{ record.alcoholNum }}
-                </p>
-                <span class="ui green label">
-                  酔い度: {{ record.currentIntoxicationLevel }}</span
-                >
-                <div class="ui divider"></div>
+        <h3 class="ui dividing header">{{ selectedDate }} の飲酒記録</h3>
+        <div class="ui divided items">
+          <template v-if="records.length > 0">
+            <template v-for="(record, index) in records" :key="index">
+              <div class="item">
+                <div class="content">
+                  <i
+                    v-if="isMyAlcohol(record.userId)"
+                    class="big teal edit icon right floated"
+                  >
+                  </i>
+                  <div class="ui green header">
+                    酔い度: {{ record.currentIntoxicationLevel }}
+                  </div>
+                  <p class="text">
+                    アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
+                    {{ record.alcoholQuantity }}ml、 本数:
+                    {{ record.alcoholNum }}
+                  </p>
+                </div>
               </div>
+            </template>
+          </template>
+          <template v-else class="item">
+            <div class="content">
+              <div class="ui grey header">no data</div>
             </div>
           </template>
         </div>
@@ -61,17 +65,22 @@ export default {
     // Vue.jsで使う変数はここに記述する
 
     return {
-      selectedDate: null,
+      selectedDate: "",
       masks: ref({ modelValue: "YYYY-MM-DD" }),
       records: [],
+      url: "",
     };
   },
 
   async mounted() {
     this.setDate();
-    console.log(this.selectedDate);
-
     await this.getRecords();
+  },
+
+  watch: {
+    selectedDate(newDate) {
+      this.getRecords();
+    },
   },
 
   methods: {

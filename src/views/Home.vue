@@ -91,33 +91,39 @@
         </form>
       </div>
 
-      <!-- 飲酒履歴 -->
-      <h3 class="ui dividing header">飲酒履歴</h3>
-      <div class="ui segment">
-        <ul class="ui comments divided alcohol-list">
-          <template v-for="(record, index) in records" :key="index">
-            <li class="comment">
-              <div class="content">
-                <button
-                  v-if="isMyAlcohol(record.userId)"
-                  class="ui negative mini button right floated"
-                  @click="deleteAlcohol(record)"
-                >
-                  削除
-                </button>
-                <p class="text">
-                  アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
-                  {{ record.alcoholQuantity }}ml、 本数:
-                  {{ record.alcoholNum }}
-                </p>
-                <span class="ui green label">
-                  酔い度: {{ record.currentIntoxicationLevel }}</span
-                >
-                <div class="ui divider"></div>
+      <!-- 履歴標示 -->
+      <div class="ui segment record">
+        <h3 class="ui dividing header">飲酒記録</h3>
+        <div class="ui divided items">
+          <template v-if="records.length > 0">
+            <template v-for="(record, index) in records" :key="index">
+              <div class="item">
+                <div class="content">
+                  <button
+                    v-if="isMyAlcohol(record.userId)"
+                    class="ui negative mini button right floated"
+                    @click="deleteAlcohol(record)"
+                  >
+                    削除
+                  </button>
+                  <div class="ui green header">
+                    酔い度: {{ record.currentIntoxicationLevel }}
+                  </div>
+                  <p class="text">
+                    アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
+                    {{ record.alcoholQuantity }}ml、 本数:
+                    {{ record.alcoholNum }}
+                  </p>
+                </div>
               </div>
-            </li>
+            </template>
           </template>
-        </ul>
+          <template v-else class="item">
+            <div class="content">
+              <div class="ui grey header">no data</div>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
   </div>
