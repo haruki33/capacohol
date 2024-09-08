@@ -64,52 +64,48 @@
     </div>
 
     <div class="ui divider"></div>
-    <table class="ui single line table">
-      <tbody>
-        <div class="ui three column grid">
-          <div class="row">
-            <div
-              class="eight wide column"
-              style="text-align: left; font-weight: bold; font-size: 1.5rem"
-            >
-              ほろ酔いまで
-            </div>
-            <div class="six wide column" style="text-align: right">
-              <a class="ui big blue circular label">2</a>
-            </div>
-            <div class="two wide column">缶</div>
-          </div>
+    <div class="ui three column grid">
+      <div class="row">
+        <div
+          class="eight wide column"
+          style="text-align: left; font-weight: bold; font-size: 1.5rem"
+        >
+          ほろ酔いまで
         </div>
-        <div class="ui grid">
-          <div class="row">
-            <div
-              class="ten wide column"
-              style="text-align: left; font-weight: bold; font-size: 1.5rem"
-            >
-              そこそこ酔いまで
-            </div>
-            <div class="four wide column" style="text-align: right">
-              <a class="ui big blue circular label">2</a>
-            </div>
-            <div class="two wide column">缶</div>
-          </div>
+        <div class="six wide column" style="text-align: right">
+          <a class="ui big blue circular label">{{ user.limitHoroyoi }}</a>
         </div>
-        <div class="ui grid">
-          <div class="row">
-            <div
-              class="eight wide column"
-              style="text-align: left; font-weight: bold; font-size: 1.5rem"
-            >
-              マジ酔いまで
-            </div>
-            <div class="six wide column" style="text-align: right">
-              <a class="ui big blue circular label">2</a>
-            </div>
-            <div class="two wide column">缶</div>
-          </div>
+        <div class="two wide column">缶</div>
+      </div>
+    </div>
+    <div class="ui grid">
+      <div class="row">
+        <div
+          class="ten wide column"
+          style="text-align: left; font-weight: bold; font-size: 1.5rem"
+        >
+          そこそこ酔いまで
         </div>
-      </tbody>
-    </table>
+        <div class="four wide column" style="text-align: right">
+          <a class="ui big blue circular label">{{ user.limitSokoyoi }}</a>
+        </div>
+        <div class="two wide column">缶</div>
+      </div>
+    </div>
+    <div class="ui grid">
+      <div class="row">
+        <div
+          class="eight wide column"
+          style="text-align: left; font-weight: bold; font-size: 1.5rem"
+        >
+          マジ酔いまで
+        </div>
+        <div class="six wide column" style="text-align: right">
+          <a class="ui big blue circular label">{{ user.limitGatiyoi }}</a>
+        </div>
+        <div class="two wide column">缶</div>
+      </div>
+    </div>
     <div class="ui divider"></div>
     <div class="ui grid">
       <div class="row" style="background-color: #f0f0f0">
@@ -209,16 +205,7 @@ export default {
     },
 
     async fetchUserId() {
-      if (this.isCallingApi) {
-        return;
-      }
-      this.isCallingApi = true;
-
-      const headers = {
-        Authorization: "mtiToken",
-        "Access-Control-Allow-Origin": "*",
-      };
-
+      const headers = { Authorization: "mtiToken" };
       try {
         const res = await fetch(
           `${baseUrl}/user?userId=${this.user.userId}&affilicationId=${this.user.affilicationId}`,
@@ -229,7 +216,6 @@ export default {
         );
 
         const jsonData = await res.json();
-        console.log(jsonData);
         if (!res.ok) {
           const errorMessage =
             jsonData.message ?? "エラーメッセージがありません";
@@ -239,8 +225,6 @@ export default {
       } catch (e) {
         console.error("ユーザーIDの取得中にエラーが発生しました:", e);
         this.errorMsg = e.message;
-      } finally {
-        this.isCallingApi = false;
       }
     },
 
@@ -250,7 +234,7 @@ export default {
 
       try {
         const res = await fetch(
-          `${baseUrl}/user/limit?userId=${this.user.userId}&sucurrentIntoxicationLevel=${limitType}`,
+          `${baseUrl}/user/limit?userId=${this.user.userId}&currentIntoxicationLevel=${limitType}`,
           {
             method: "GET",
             headers,
@@ -258,7 +242,6 @@ export default {
         );
 
         const jsonData = await res.json();
-        console.log(jsonData);
 
         if (!res.ok) {
           const errorMessage =
@@ -267,25 +250,18 @@ export default {
         }
         this.user.limitHoroyoi = jsonData.limitAlcoholNum;
       } catch (e) {
-        console.error("ユーザーIDの取得中にエラーが発生しました:", e);
+        console.error("ほろ酔いデータの取得中にエラーが発生しました:", e);
         this.errorMsg = e.message;
-      } finally {
-        this.isCallingApi = false;
       }
     },
 
     async fetchlimitSokoyoi() {
-      if (this.isCallingApi) {
-        return;
-      }
-      this.isCallingApi = true;
-
       const headers = { Authorization: "mtiToken" };
       const limitType = 2;
 
       try {
         const res = await fetch(
-          `${baseUrl}/user/limit?userId=${this.user.userId}&sucurrentIntoxicationLevel=${limitType}`,
+          `${baseUrl}/user/limit?userId=${this.user.userId}&currentIntoxicationLevel=${limitType}`,
           {
             method: "GET",
             headers,
@@ -301,25 +277,18 @@ export default {
         }
         this.user.limitSokoyoi = jsonData.limitAlcoholNum;
       } catch (e) {
-        console.error("ユーザーIDの取得中にエラーが発生しました:", e);
+        console.error("そこ酔いデータの取得中にエラーが発生しました:", e);
         this.errorMsg = e.message;
-      } finally {
-        this.isCallingApi = false;
       }
     },
 
     async fetchlimitGatiyoi() {
-      if (this.isCallingApi) {
-        return;
-      }
-      this.isCallingApi = true;
-
       const headers = { Authorization: "mtiToken" };
       const limitType = 3;
 
       try {
         const res = await fetch(
-          `${baseUrl}/user/limit?userId=${this.user.userId}&sucurrentIntoxicationLevel=${limitType}`,
+          `${baseUrl}/user/limit?userId=${this.user.userId}&currentIntoxicationLevel=${limitType}`,
           {
             method: "GET",
             headers,
@@ -335,10 +304,8 @@ export default {
         }
         this.user.limitGatiyoi = jsonData.limitAlcoholNum;
       } catch (e) {
-        console.error("ユーザーIDの取得中にエラーが発生しました:", e);
+        console.error("がち酔いデータの取得中にエラーが発生しました:", e);
         this.errorMsg = e.message;
-      } finally {
-        this.isCallingApi = false;
       }
     },
 
@@ -396,6 +363,7 @@ export default {
       };
     },
 
+    // 更新用
     async submit() {
       if (this.isCallingApi) {
         return;
@@ -430,9 +398,11 @@ export default {
         this.isCallingApi = false;
       }
     },
+
+    async getTodayIntakeAlcohol() {},
   },
 
-  created() {
+  mounted() {
     this.fetchUserId();
     this.fetchlimitHoroyoi();
     this.fetchlimitSokoyoi();

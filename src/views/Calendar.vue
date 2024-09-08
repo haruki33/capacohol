@@ -4,12 +4,17 @@
       <!-- 基本的なコンテンツはここに記載する -->
       <h1 class="ui dividing header">お酒カレンダー</h1>
       <div class="ui segment calendar-segment">
-        <VDatePicker expanded v-model.string="selectedDate" :masks="masks" />
+        <VDatePicker
+          expanded
+          v-model.string="selectedDate"
+          :masks="masks"
+          :attributes="attrs"
+        />
       </div>
 
-      <!-- 履歴標示 -->
+      <!-- 履歴表示 -->
+      <h3 class="ui dividing header">{{ selectedDate }} の飲酒記録</h3>
       <div class="ui segment record">
-        <h3 class="ui dividing header">{{ selectedDate }} の飲酒記録</h3>
         <div class="ui divided items">
           <template v-if="records.length > 0">
             <template v-for="(record, index) in records" :key="index">
@@ -69,6 +74,13 @@ export default {
       masks: ref({ modelValue: "YYYY-MM-DD" }),
       records: [],
       url: "",
+      attrs: ref([
+        {
+          key: "today",
+          dot: true,
+          dates: new Date(),
+        },
+      ]),
     };
   },
 
