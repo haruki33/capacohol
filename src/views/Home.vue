@@ -92,8 +92,8 @@
       </div>
 
       <!-- 履歴標示 -->
+      <h3 class="ui dividing header">飲酒記録</h3>
       <div class="ui segment record">
-        <h3 class="ui dividing header">飲酒記録</h3>
         <div class="ui divided items">
           <template v-if="records.length > 0">
             <template v-for="(record, index) in records" :key="index">

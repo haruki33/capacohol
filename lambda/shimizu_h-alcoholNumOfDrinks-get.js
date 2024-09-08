@@ -1,11 +1,14 @@
-const {
-  DynamoDBClient,
-  QueryCommand,
-  ScanCommand,
-} = require("@aws-sdk/client-dynamodb");
+const { DynamoDBClient, QueryCommand } = require("@aws-sdk/client-dynamodb");
 const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
 const client = new DynamoDBClient({ region: "ap-northeast-1" });
 const TableName = "alcoholRecord";
+
+var sum = 0;
+const CalcNumOfDricks = (data) => {
+  for (var i = 0; i < data.length; i++) {
+    sum = sum + data.alcoholNum;
+  }
+};
 
 exports.handler = async (event, context) => {
   const response = {
@@ -62,7 +65,8 @@ exports.handler = async (event, context) => {
       throw new Error("飲酒履歴がありません");
     }
     const unmarshallrecords = records.map((item) => unmarshall(item));
-    response.body = JSON.stringify({ records: unmarshallrecords });
+    const NumOfDricks = CalcNumOfDricks(unmarshallrecords);
+    response.body = JSON.stringify({ NumOfDricks: NumOfDricks });
   } catch (e) {
     if (e.message == "飲酒履歴がありません") {
       response.statusCode = 204;
