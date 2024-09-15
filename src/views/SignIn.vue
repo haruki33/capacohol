@@ -16,7 +16,10 @@
               indeterminate
             ></v-progress-linear>
           </template>
-          <v-alert v-if="errorMsg" type="error">{{ errorMsg }}</v-alert>
+
+          <v-alert v-if="errorMSg" type="error" dense outlined>{{
+            errorMsg
+          }}</v-alert>
 
           <v-img
             class="mx-auto my-6"
@@ -49,6 +52,30 @@
               clearable
             ></v-text-field>
 
+            <div class="text-subtitle-1 text-medium-emphasis">体重</div>
+            <v-text-field
+              v-model="user.weight"
+              :readonly="loading"
+              :rules="[rules.required]"
+              class="mb-3"
+              label="Weight"
+              placeholder="Enter your Weight"
+              prepend-inner-icon="mdi-weight"
+              clearable
+            ></v-text-field>
+
+            <div class="text-subtitle-1 text-medium-emphasis">好きなお酒</div>
+            <v-text-field
+              v-model="user.likeSake"
+              :readonly="loading"
+              :rules="[rules.required]"
+              class="mb-3"
+              label="likeSake"
+              placeholder="Enter your likeSake"
+              prepend-inner-icon="mdi-glass-mug"
+              clearable
+            ></v-text-field>
+
             <div class="text-subtitle-1 text-medium-emphasis">パスワード</div>
             <v-text-field
               v-model="user.password"
@@ -71,15 +98,8 @@
               variant="elevated"
               block
             >
-              Login
+              SignUp
             </v-btn>
-
-            <v-card-text class="text-center">
-              <div class="text-gray">
-                新規登録は
-                <router-link to="/SignIn">こちら</router-link>
-              </div>
-            </v-card-text>
           </v-form>
         </v-card>
       </v-container>
@@ -89,10 +109,9 @@
 
 <script>
 import { baseUrl } from "@/assets/config.js";
-import router from "../router";
 
 export default {
-  name: "Login",
+  name: "SingIn",
 
   data() {
     return {
@@ -103,6 +122,8 @@ export default {
         userId: null,
         affilicationId: null,
         password: null,
+        weight: null,
+        likeSake: null,
       },
       errorMsg: "", // エラーメッセージ用
       loading: false, // ローディング表示用
@@ -119,9 +140,9 @@ export default {
     async submit() {
       this.loading = true;
 
-      const path = "/user/login";
-      const { userId, affilicationId, password } = this.user;
-      const reqBody = { userId, password, affilicationId };
+      const path = "/user/signup";
+      const { userId, affilicationId, password, weight, likeSake } = this.user;
+      const reqBody = { userId, password, affilicationId, weight, likeSake };
 
       try {
         const res = await fetch(baseUrl + path, {
@@ -148,7 +169,7 @@ export default {
         console.error(e);
         this.errorMsg = e;
       } finally {
-        this.loading = false;
+        this.isCallingApi = false;
       }
     },
   },

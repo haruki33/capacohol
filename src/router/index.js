@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue";
+import SignIn from "../views/SignIn.vue";
 import Profile from "../views/Profile.vue";
 import Calendar from "../views/Calendar.vue";
 
@@ -21,6 +22,14 @@ const router = createRouter({
       component: Login,
       meta: {
         title: "ログイン/capacohol",
+      },
+    },
+    {
+      path: "/SignIn",
+      name: "SignIn",
+      component: SignIn,
+      meta: {
+        title: "サインイン/capacohol",
       },
     },
     {

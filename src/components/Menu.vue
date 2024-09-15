@@ -76,7 +76,7 @@ export default {
 
   computed: {
     isMenuNeeded() {
-      return this.$route.name !== "Login";
+      return this.$route.name !== "Login" && this.$route.name !== "SignIn";
     },
   },
 
