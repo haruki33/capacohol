@@ -1,4 +1,7 @@
 <template>
+  <v-card class="lisence">
+    <v-card-title>お酒免許書</v-card-title>
+  </v-card>
   <div class="ui main container">
     <div class="ui active inverted page dimmer" v-if="isCallingApi">
       <div class="ui text loader">Loading</div>
@@ -173,7 +176,10 @@ export default {
         labels: [],
         datasets: [
           {
-            data: [],
+            data: [
+              40, 20, 12, 0, 0, 0, 0, 0, 0, 0, 40, 20, 12, 0, 0, 0, 0, 0, 0, 0,
+              40, 20, 12, 0, 0, 0, 0, 0, 0, 0,
+            ],
             backgroundColor: "blue",
           },
         ],
@@ -309,35 +315,44 @@ export default {
       }
     },
 
-    async fetchDate() {
-      this.isCallingApi = true;
-
-      const headers = { Authorization: "mtiToken" };
-
-      try {
-        const res = await fetch(`${baseUrl}/date`, {
-          // APIエンドポイントを設定
-          method: "GET",
-          headers,
-        });
-
-        const jsonData = await res.json();
-
-        if (!res.ok) {
-          const errorMessage =
-            jsonData.message ?? "エラーメッセージがありません";
-          throw new Error(errorMessage);
-        }
-
-        const date = new Date(jsonData.date); // APIから取得したdate
-        this.updateChartData(date);
-      } catch (e) {
-        console.error("日付の取得中にエラーが発生しました:", e);
-        this.errorMsg = e.message;
-      } finally {
-        this.isCallingApi = false;
-      }
+    async getDays() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth(); // 1月は0、2月は1、…、12月は11
+      const days = new Date(year, month + 1, 0).getDate();
+      this.chartData.labels = Array.from({ length: days }, (_, i) => i + 1);
+      console.log(this.chartData.labels, this.chartData.datasets);
     },
+
+    // async fetchDate() {
+    //   this.isCallingApi = true;
+
+    //   const headers = { Authorization: "mtiToken" };
+
+    //   try {
+    //     const res = await fetch(`${baseUrl}/date`, {
+    //       // APIエンドポイントを設定
+    //       method: "GET",
+    //       headers,
+    //     });
+
+    //     const jsonData = await res.json();
+
+    //     if (!res.ok) {
+    //       const errorMessage =
+    //         jsonData.message ?? "エラーメッセージがありません";
+    //       throw new Error(errorMessage);
+    //     }
+
+    //     const date = new Date(jsonData.date); // APIから取得したdate
+    //     this.updateChartData(date);
+    //   } catch (e) {
+    //     console.error("日付の取得中にエラーが発生しました:", e);
+    //     this.errorMsg = e.message;
+    //   } finally {
+    //     this.isCallingApi = false;
+    //   }
+    // },
 
     updateChartData(date) {
       const dateList = [
@@ -407,6 +422,7 @@ export default {
     this.fetchlimitHoroyoi();
     this.fetchlimitSokoyoi();
     this.fetchlimitGatiyoi();
+    this.getDays();
   },
 };
 </script>
@@ -416,5 +432,9 @@ export default {
 .ui.main.container {
   margin-bottom: 100px; /* メニューバーの高さと同じ値に設定 */
   padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
+}
+
+.lisence {
+  margin: 10px;
 }
 </style>
