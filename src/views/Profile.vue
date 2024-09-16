@@ -1,71 +1,130 @@
 <template>
-  <v-card class="lisence">
-    <v-card-title>お酒免許書</v-card-title>
-  </v-card>
-  <div class="ui main container">
+  <v-container class="pa-4 licence-container">
+    <v-card outlined elevation="10" rounded="3" height="100%">
+      <!-- 免許証のヘッダー部分 -->
+      <v-card
+        border="opacity-50 sm"
+        class="rounded-pill mx-3 my-3"
+        elevation="0"
+      >
+        <v-row no-gutters>
+          <v-col cols="2" class="mx-0">
+            <div class="border-right text-center">氏名</div>
+          </v-col>
+          <v-col cols="5">
+            <div class="border-right text-center">{{ user.userId }}</div>
+          </v-col>
+          <v-col cols="5">
+            <div class="text-center">令和 5 年 9 月 16 日</div>
+          </v-col>
+        </v-row>
+      </v-card>
+
+      <!-- 写真と名前の部分 -->
+      <v-card
+        border="opacity-50 sm"
+        rounded="2"
+        class="mx-3 my-3"
+        elevation="0"
+      >
+        <v-row no-gutters class="border-bottom">
+          <v-col cols="2">
+            <div class="border-right text-center">住所</div>
+          </v-col>
+          <v-col cols="10" class="text-center">○○県○○市○○町</v-col>
+        </v-row>
+
+        <!-- 免許証情報の部分 -->
+        <v-row no-gutters>
+          <v-col cols="8">
+            <v-row no-gutters>
+              <v-col cols="3">
+                <div class="border-right border-bottom text-center">交付</div>
+              </v-col>
+              <v-col cols="9">
+                <div class="border-bottom text-center">○○</div>
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col cols="12">
+                <v-sheet style="background-color: #f7d88a">
+                  <p class="text-h6 ml-1">酒の強さ：</p>
+                </v-sheet>
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col cols="12">
+                <v-sheet>
+                  <p class="ml-1">免許の条件等：がちで酒弱いです泣</p>
+                </v-sheet>
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col cols="5">
+                <v-sheet class="text-h6 mt-14 ml-1">現在の酔い度</v-sheet>
+              </v-col>
+              <v-col cols="7" class="text-h3 mt-10">がち酔い</v-col>
+            </v-row>
+            <v-divider></v-divider>
+            <div class="ma-2">
+              <v-row no-gutters>
+                <v-col cols="2">
+                  <v-sheet align="center" justify="center">
+                    <p class="text-center vertical-text mt-1">好きな酒</p>
+                  </v-sheet>
+                </v-col>
+                <v-col cols="10">
+                  <v-row no-gutters>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </div>
+          </v-col>
+          <v-col cols="4">
+            <v-row no-gutters>
+              <v-col cols="12">
+                <v-sheet :height="200" class="ma-2" border></v-sheet>
+              </v-col>
+            </v-row>
+            <v-row no-gutters>
+              <v-col cols="12" class="mb-2 text-center" style="color: red"
+                >お酒安全委員会</v-col
+              >
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-card>
+  </v-container>
+  <!-- 
     <div class="ui active inverted page dimmer" v-if="isCallingApi">
       <div class="ui text loader">Loading</div>
     </div>
-    <div class="ui dividing header">
-      <h1>お酒免許証</h1>
-      <a
-        @click="logout"
-        class="item"
-        style="display: block; margin-top: 10px; cursor: pointer"
-        >Logout</a
-      >
-    </div>
-    <div class="ui grid">
-      <div class="row">
-        <div
-          class="ui six wide column"
-          style="display: flex; align-items: center; justify-content: center"
-        >
-          <i class="user icon" style="font-size: 4em"></i>
-        </div>
-        <div class="ui ten wide column">
-          <table class="ui single line table">
-            <tbody>
-              <div class="ui grid">
-                <div class="row" style="background-color: #ffffff">
-                  <div class="eight wide column" style="text-align: left">
-                    名前
-                  </div>
-                  <div class="eight wide column" style="text-align: right">
-                    {{ user.userId }}
-                  </div>
-                </div>
-                <div class="row" style="background-color: #f0f0f0">
-                  <div class="eight wide column" style="text-align: left">
-                    所属
-                  </div>
-                  <div class="eight wide column" style="text-align: right">
-                    {{ user.affilicationId }}
-                  </div>
-                </div>
-                <div class="row" style="background-color: #ffffff">
-                  <div class="eight wide column" style="text-align: left">
-                    好きなお酒
-                  </div>
-                  <div class="eight wide column" style="text-align: right">
-                    {{ user.likeSake }}
-                  </div>
-                </div>
-                <div class="row" style="background-color: #f0f0f0">
-                  <div class="eight wide column" style="text-align: left">
-                    お酒の強さ
-                  </div>
-                  <div class="eight wide column" style="text-align: right">
-                    {{ user.currentIntoxicationLevel }}
-                  </div>
-                </div>
-              </div>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
+    
     <div class="ui divider"></div>
     <div class="ui three column grid">
       <div class="row">
@@ -126,7 +185,7 @@
     </div>
     <h2 class="blue-text">今月のグラフ</h2>
     <Bar id="userId" :options="chartOptions" :data="chartData" />
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -434,7 +493,22 @@ export default {
   padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
 }
 
-.lisence {
-  margin: 10px;
+.licence-container {
+  width: 100%;
+  max-width: 600px;
+  min-width: 400px;
+}
+
+.border-right {
+  border-right: 1px solid #000;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #000;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl; /* 文字を縦に表示 */
+  text-orientation: upright; /* 日本語の縦書きで文字を回転させない */
 }
 </style>
