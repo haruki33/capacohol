@@ -1,124 +1,269 @@
 <template>
-  <v-container class="pa-4 licence-container">
-    <v-card outlined elevation="10" rounded="3" height="100%">
-      <!-- 免許証のヘッダー部分 -->
-      <v-card
-        border="opacity-50 sm"
-        class="rounded-pill mx-3 my-3"
-        elevation="0"
-      >
-        <v-row no-gutters>
-          <v-col cols="2" class="mx-0">
-            <div class="border-right text-center">氏名</div>
-          </v-col>
-          <v-col cols="5">
-            <div class="border-right text-center">{{ user.userId }}</div>
-          </v-col>
-          <v-col cols="5">
-            <div class="text-center">令和 5 年 9 月 16 日</div>
-          </v-col>
-        </v-row>
-      </v-card>
-
-      <!-- 写真と名前の部分 -->
-      <v-card
-        border="opacity-50 sm"
-        rounded="2"
-        class="mx-3 my-3"
-        elevation="0"
-      >
-        <v-row no-gutters class="border-bottom">
-          <v-col cols="2">
-            <div class="border-right text-center">住所</div>
-          </v-col>
-          <v-col cols="10" class="text-center">○○県○○市○○町</v-col>
-        </v-row>
-
-        <!-- 免許証情報の部分 -->
-        <v-row no-gutters>
-          <v-col cols="8">
+  <v-container class="pa-4">
+    <div class="text-h6 text-center">お酒免許書</div>
+    <v-divider class="ma-2 opacity-100"></v-divider>
+    <v-row class="d-flex justify-center">
+      <v-col cols="12" sm="8" md="6" lg="6" xl="6" xxl="6">
+        <v-card outlined elevation="10" rounded="3">
+          <!-- 免許証のヘッダー部分 -->
+          <v-card
+            border="opacity-100 sm"
+            class="rounded-pill mx-3 my-3"
+            elevation="0"
+          >
             <v-row no-gutters>
-              <v-col cols="3">
-                <div class="border-right border-bottom text-center">交付</div>
+              <v-col cols="2" class="mx-0">
+                <div class="text-center">氏名</div>
               </v-col>
-              <v-col cols="9">
-                <div class="border-bottom text-center">○○</div>
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col cols="12">
-                <v-sheet style="background-color: #f7d88a">
-                  <p class="text-h6 ml-1">酒の強さ：</p>
-                </v-sheet>
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
-              <v-col cols="12">
-                <v-sheet>
-                  <p class="ml-1">免許の条件等：がちで酒弱いです泣</p>
-                </v-sheet>
-              </v-col>
-            </v-row>
-            <v-row no-gutters>
+              <v-divider class="border-opacity-100" vertical></v-divider>
               <v-col cols="5">
-                <v-sheet class="text-h6 mt-14 ml-1">現在の酔い度</v-sheet>
+                <div class="text-center">{{ user.userId }}</div>
               </v-col>
-              <v-col cols="7" class="text-h3 mt-10">がち酔い</v-col>
+              <v-divider class="border-opacity-100" vertical></v-divider>
+              <v-col cols="5">
+                <div class="text-center">令和 5 年 9 月 16 日</div>
+              </v-col>
             </v-row>
-            <v-divider></v-divider>
-            <div class="ma-2">
-              <v-row no-gutters>
-                <v-col cols="2">
-                  <v-sheet align="center" justify="center">
-                    <p class="text-center vertical-text mt-1">好きな酒</p>
-                  </v-sheet>
-                </v-col>
-                <v-col cols="10">
+          </v-card>
+
+          <!-- 写真と名前の部分 -->
+          <v-card
+            border="opacity-100 sm"
+            rounded="2"
+            class="mx-3 my-3"
+            elevation="0"
+          >
+            <v-row no-gutters class="border-bottom">
+              <v-col cols="2">
+                <div class="text-center">住所</div>
+              </v-col>
+              <v-divider class="border-opacity-100" vertical></v-divider>
+              <v-col cols="10" class="text-center">○○県○○市○○町</v-col>
+            </v-row>
+
+            <!-- 免許証情報の部分 -->
+            <v-row no-gutters>
+              <v-col cols="8">
+                <v-row no-gutters>
+                  <v-col cols="3">
+                    <div class="text-center">交付</div>
+                  </v-col>
+                  <v-divider class="border-opacity-100" vertical></v-divider>
+                  <v-col cols="9">
+                    <div class="text-center">○○</div>
+                  </v-col>
+                </v-row>
+                <v-divider class="border-opacity-100"></v-divider>
+                <v-row no-gutters>
+                  <v-col cols="12">
+                    <v-sheet style="background-color: #f7d88a">
+                      <p class="text-h6 ml-1">酒の強さ：</p>
+                    </v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="12">
+                    <v-sheet>
+                      <p class="ml-1">免許の条件等：がちで酒弱いです泣</p>
+                    </v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="5">
+                    <v-sheet class="text-h6 mt-14 ml-1">現在の酔い度</v-sheet>
+                  </v-col>
+                  <v-col cols="7" class="text-h4 mt-11 font-weight-bold"
+                    >がち酔い</v-col
+                  >
+                </v-row>
+                <v-divider class="opacity-80"></v-divider>
+                <div class="ma-2">
                   <v-row no-gutters>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    <v-col cols="2">
+                      <v-sheet align="center" justify="center">
+                        <p class="text-center vertical-text mt-1">好きな酒</p>
+                      </v-sheet>
                     </v-col>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
-                    </v-col>
-                    <v-col cols="3">
-                      <v-sheet class="text-h6 text-center">beer</v-sheet>
+                    <v-col cols="10">
+                      <v-row no-gutters>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                      </v-row>
                     </v-col>
                   </v-row>
-                </v-col>
-              </v-row>
-            </div>
-          </v-col>
-          <v-col cols="4">
-            <v-row no-gutters>
-              <v-col cols="12">
-                <v-sheet :height="200" class="ma-2" border></v-sheet>
+                </div>
+              </v-col>
+              <v-col cols="4">
+                <v-row no-gutters>
+                  <v-col cols="12">
+                    <v-sheet :height="200" class="ma-2" border></v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="12" class="mb-2 text-center" style="color: red"
+                    >お酒安全委員会</v-col
+                  >
+                </v-row>
               </v-col>
             </v-row>
+          </v-card>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="8" md="8" lg="6" xl="6" xxl="6">
+        <v-card outlined elevation="10" rounded="3">
+          <!-- 免許証のヘッダー部分 -->
+          <v-card
+            border="opacity-100 sm"
+            class="rounded-pill mx-3 my-3"
+            elevation="0"
+          >
             <v-row no-gutters>
-              <v-col cols="12" class="mb-2 text-center" style="color: red"
-                >お酒安全委員会</v-col
-              >
+              <v-col cols="2" class="mx-0">
+                <div class="text-center">氏名</div>
+              </v-col>
+              <v-divider class="border-opacity-100" vertical></v-divider>
+              <v-col cols="5">
+                <div class="text-center">{{ user.userId }}</div>
+              </v-col>
+              <v-divider class="border-opacity-100" vertical></v-divider>
+              <v-col cols="5">
+                <div class="text-center">令和 5 年 9 月 16 日</div>
+              </v-col>
             </v-row>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-card>
+          </v-card>
+
+          <!-- 写真と名前の部分 -->
+          <v-card
+            border="opacity-100 sm"
+            rounded="2"
+            class="mx-3 my-3"
+            elevation="0"
+          >
+            <v-row no-gutters class="border-bottom">
+              <v-col cols="2">
+                <div class="text-center">住所</div>
+              </v-col>
+              <v-divider class="border-opacity-100" vertical></v-divider>
+              <v-col cols="10" class="text-center">○○県○○市○○町</v-col>
+            </v-row>
+
+            <!-- 免許証情報の部分 -->
+            <v-row no-gutters>
+              <v-col cols="8">
+                <v-row no-gutters>
+                  <v-col cols="3">
+                    <div class="text-center">交付</div>
+                  </v-col>
+                  <v-divider class="border-opacity-100" vertical></v-divider>
+                  <v-col cols="9">
+                    <div class="text-center">○○</div>
+                  </v-col>
+                </v-row>
+                <v-divider class="border-opacity-100"></v-divider>
+                <v-row no-gutters>
+                  <v-col cols="12">
+                    <v-sheet style="background-color: #f7d88a">
+                      <p class="text-h6 ml-1">酒の強さ：</p>
+                    </v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="12">
+                    <v-sheet>
+                      <p class="ml-1">免許の条件等：がちで酒弱いです泣</p>
+                    </v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="5">
+                    <v-sheet class="text-h6 mt-14 ml-1">現在の酔い度</v-sheet>
+                  </v-col>
+                  <v-col cols="7" class="text-h4 mt-11 font-weight-bold"
+                    >がち酔い</v-col
+                  >
+                </v-row>
+                <v-divider class="opacity-80"></v-divider>
+                <div class="ma-2">
+                  <v-row no-gutters>
+                    <v-col cols="2">
+                      <v-sheet align="center" justify="center">
+                        <p class="text-center vertical-text mt-1">好きな酒</p>
+                      </v-sheet>
+                    </v-col>
+                    <v-col cols="10">
+                      <v-row no-gutters>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                        <v-col cols="3">
+                          <v-sheet class="text-h6 text-center">beer</v-sheet>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
+                </div>
+              </v-col>
+              <v-col cols="4">
+                <v-row no-gutters>
+                  <v-col cols="12">
+                    <v-sheet :height="200" class="ma-2" border></v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row no-gutters>
+                  <v-col cols="12" class="mb-2 text-center" style="color: red"
+                    >お酒安全委員会</v-col
+                  >
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+  <v-container>
+    <div class="text-h6 text-center">今月のグラフ</div>
+    <v-divider class="opacity-100"></v-divider>
   </v-container>
   <!-- 
     <div class="ui active inverted page dimmer" v-if="isCallingApi">
@@ -493,8 +638,7 @@ export default {
   padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
 }
 
-.licence-container {
-  width: 100%;
+.licence-card {
   max-width: 600px;
   min-width: 400px;
 }
