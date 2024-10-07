@@ -3,7 +3,7 @@
     <div class="text-h6 text-center">お酒免許書</div>
     <v-divider class="ma-2 opacity-100"></v-divider>
     <v-row class="d-flex justify-center">
-      <v-col cols="12" sm="8" md="6" lg="6" xl="6" xxl="6">
+      <v-col cols="auto">
         <v-card outlined elevation="10" rounded="3">
           <!-- 免許証のヘッダー部分 -->
           <v-card
@@ -70,7 +70,7 @@
                 </v-row>
                 <v-row no-gutters>
                   <v-col cols="5">
-                    <v-sheet class="text-h6 mt-14 ml-1">現在の酔い度</v-sheet>
+                    <v-sheet class="mt-14 ml-1">現在の酔い度</v-sheet>
                   </v-col>
                   <v-col cols="7" class="text-h4 mt-11 font-weight-bold"
                     >がち酔い</v-col
@@ -131,7 +131,7 @@
           </v-card>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="8" md="8" lg="6" xl="6" xxl="6">
+      <v-col cols="auto">
         <v-card outlined elevation="10" rounded="3">
           <!-- 免許証のヘッダー部分 -->
           <v-card
@@ -198,7 +198,7 @@
                 </v-row>
                 <v-row no-gutters>
                   <v-col cols="5">
-                    <v-sheet class="text-h6 mt-14 ml-1">現在の酔い度</v-sheet>
+                    <v-sheet class="mt-14 ml-1">現在の酔い度</v-sheet>
                   </v-col>
                   <v-col cols="7" class="text-h4 mt-11 font-weight-bold"
                     >がち酔い</v-col

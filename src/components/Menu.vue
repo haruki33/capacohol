@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar class="px-3" density="compact" flat>
+    <v-bottom-navigation class="px-3" flat>
       <v-spacer></v-spacer>
 
       <v-tabs color="grey-darken-2" centered>
@@ -12,7 +12,7 @@
         ></v-tab>
       </v-tabs>
       <v-spacer></v-spacer>
-    </v-app-bar>
+    </v-bottom-navigation>
 
     <v-main style="background-color: #f7d88a">
       <router-view></router-view>
