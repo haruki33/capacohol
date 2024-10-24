@@ -1,23 +1,21 @@
 <template>
-  <v-app id="inspire">
-    <v-bottom-navigation class="px-3" flat>
-      <v-spacer></v-spacer>
+  <v-bottom-navigation class="px-3" flat>
+    <v-spacer></v-spacer>
 
-      <v-tabs color="grey-darken-2" centered>
-        <v-tab
-          v-for="link in links"
-          :key="link.text"
-          :text="link.text"
-          :to="link.to"
-        ></v-tab>
-      </v-tabs>
-      <v-spacer></v-spacer>
-    </v-bottom-navigation>
+    <v-tabs color="grey-darken-2" centered>
+      <v-tab
+        v-for="link in links"
+        :key="link.text"
+        :text="link.text"
+        :to="link.to"
+      ></v-tab>
+    </v-tabs>
+    <v-spacer></v-spacer>
+  </v-bottom-navigation>
 
-    <v-main style="background-color: #f7d88a">
-      <router-view></router-view>
-    </v-main>
-  </v-app>
+  <v-main style="background-color: #f7d88a">
+    <router-view></router-view>
+  </v-main>
 </template>
 
 <script>

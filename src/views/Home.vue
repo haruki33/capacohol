@@ -4,20 +4,20 @@
     <div class="ui text loader">Loading</div>
   </div>
 
-  <!-- エラーメッセージ用-->
-  <p class="ui negative message" v-if="errorMsg">
-    <i class="close icon" @click="clearMsg('error')"></i>
-    <span class="header">エラーが発生しました！</span>
-    {{ errorMsg }}
-  </p>
-
-  <!-- 成功メッセージ用-->
-  <p class="ui positive message" v-if="successMsg">
-    <i class="close icon" @click="clearMsg"></i>
-    <span class="header">成功！</span>
-    {{ successMsg }}
-  </p>
   <v-container>
+    <!-- エラーメッセージ用-->
+    <p class="ui negative message" v-if="errorMsg">
+      <i class="close icon" @click="clearMsg('error')"></i>
+      <span class="header">エラーが発生しました！</span>
+      {{ errorMsg }}
+    </p>
+
+    <!-- 成功メッセージ用-->
+    <p class="ui positive message" v-if="successMsg">
+      <i class="close icon" @click="clearMsg"></i>
+      <span class="header">成功！</span>
+      {{ successMsg }}
+    </p>
     <h1 class="ui header"></h1>
 
     <!-- お酒登録ボックス -->
@@ -83,25 +83,24 @@
 
   <v-container>
     <!-- 履歴標示 -->
-    <h3 class="ui dividing header">飲酒記録</h3>
-    <template v-if="records.length > 0">
-      <template v-for="(record, index) in records" :key="index">
-        <v-card class="pa-3">
-          <v-row>
-            <v-col cols="auto">
-              <v-card-title
-                >酔い度: {{ record.currentIntoxicationLevel }}</v-card-title
-              >
-              <v-card-subtitle>
-                アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
-                {{ record.alcoholQuantity }}ml、 本数:
-                {{ record.alcoholNum }}</v-card-subtitle
-              >
-            </v-col>
-          </v-row>
-        </v-card>
+    <v-card>
+      <v-card-title class="text-h5 font-weight-regular">飲酒履歴</v-card-title>
+      <template v-if="records.length > 0">
+        <template v-for="(record, index) in records" :key="index">
+          <v-divider></v-divider>
+          <v-list-item>
+            <v-list-item-title class="text-h6 pb-2"
+              >酔い度: {{ record.currentIntoxicationLevel }}</v-list-item-title
+            >
+            <v-list-subtitle>
+              アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
+              {{ record.alcoholQuantity }}ml、 本数:
+              {{ record.alcoholNum }}</v-list-subtitle
+            >
+          </v-list-item>
+        </template>
       </template>
-    </template>
+    </v-card>
   </v-container>
 </template>
 
