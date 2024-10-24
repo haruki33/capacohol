@@ -4,8 +4,8 @@ import router from "./router";
 import "./assets/style.css";
 
 // v-calendar
-import VCalendar from "v-calendar";
-import "v-calendar/style.css";
+// import VCalendar from "v-calendar";
+// import "v-calendar/style.css";
 
 // Vuetify
 import "vuetify/styles";
@@ -21,6 +21,6 @@ const vuetify = createVuetify({
 
 //v-calendarプラグインの登録
 app.use(router);
-app.use(VCalendar, {});
+// app.use(VCalendar, {});
 app.use(vuetify);
 app.mount("#app");

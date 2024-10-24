@@ -32,6 +32,7 @@ exports.handler = async (event, context) => {
     currentIntoxicationLevel,
   } = body;
   const timestamp = Date.now();
+  const month = date.substr(5, 2);
 
   const param = {
     // ↓プロパティ名と変数名が同一の場合は、値の指定を省略できる。
@@ -40,6 +41,7 @@ exports.handler = async (event, context) => {
       userId, // userId: userIdと同じ意味
       affilicationId,
       date, // 飲酒日時
+      month,
       alcoholContent,
       alcoholQuantity,
       alcoholNum,
@@ -57,6 +59,7 @@ exports.handler = async (event, context) => {
       userId,
       affilicationId,
       date,
+      month,
       alcoholContent,
       alcoholQuantity,
       alcoholNum,

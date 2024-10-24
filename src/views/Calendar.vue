@@ -1,133 +1,113 @@
 <template>
-  <div>
-    <div class="ui main container">
-      <!-- 基本的なコンテンツはここに記載する -->
-      <h1 class="ui dividing header">お酒カレンダー</h1>
-      <div class="ui segment calendar-segment">
-        <VDatePicker
-          expanded
-          v-model.string="selectedDate"
-          :masks="masks"
-          :attributes="attrs"
-        />
-      </div>
+  <v-container>
+    <DatePicker
+      expanded
+      v-model.string="selectedDate"
+      :masks="masks"
+      :attributes="attrs"
+    />
+  </v-container>
 
-      <!-- 履歴表示 -->
-      <h3 class="ui dividing header">{{ selectedDate }} の飲酒記録</h3>
-      <div class="ui segment record">
-        <div class="ui divided items">
-          <template v-if="records.length > 0">
-            <template v-for="(record, index) in records" :key="index">
-              <div class="item">
-                <div class="content">
-                  <i
-                    v-if="isMyAlcohol(record.userId)"
-                    class="big teal edit icon right floated"
-                  >
-                  </i>
-                  <div class="ui green header">
-                    酔い度: {{ record.currentIntoxicationLevel }}
-                  </div>
-                  <p class="text">
-                    アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
-                    {{ record.alcoholQuantity }}ml、 本数:
-                    {{ record.alcoholNum }}
-                  </p>
-                </div>
-              </div>
-            </template>
-          </template>
-          <template v-else class="item">
-            <div class="content">
-              <div class="ui grey header">no data</div>
-            </div>
-          </template>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-container>
+    <!-- 履歴標示 -->
+    <v-card>
+      <v-card-title class="text-h5 font-weight-regular"
+        >{{ selectedDate }}の飲酒履歴</v-card-title
+      >
+      <template v-if="recordsOnSelectedDate.length > 0">
+        <template v-for="(record, index) in recordsOnSelectedDate" :key="index">
+          <v-divider></v-divider>
+          <v-list-item>
+            <v-list-item-title class="text-h6 pb-2"
+              >酔い度: {{ record.currentIntoxicationLevel }}</v-list-item-title
+            >
+            <v-list-subtitle>
+              アルコール度数: {{ record.alcoholContent }}%、 飲んだ量:
+              {{ record.alcoholQuantity }}ml、 本数:
+              {{ record.alcoholNum }}</v-list-subtitle
+            >
+          </v-list-item>
+        </template>
+      </template>
+      <template v-else>
+        <v-list-item>
+          <v-list-title class="text-h6 pb-2">No datas</v-list-title>
+        </v-list-item>
+      </template>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
-// 必要なものはここでインポートする
-// @は/srcの同じ意味です
-// import something from '@/components/something.vue';
 import { baseUrl } from "@/assets/config.js";
-import { Calendar } from "v-calendar";
+import { Calendar, DatePicker } from "v-calendar";
 import "v-calendar/style.css";
-import { ref } from "vue";
-const headers = { Authorization: "mtiToken" };
 
 export default {
   name: "Calendar",
 
   components: {
-    // 読み込んだコンポーネント名をここに記述する
     Calendar,
+    DatePicker,
   },
 
   data() {
-    // Vue.jsで使う変数はここに記述する
-
     return {
+      // ユーザ関連
+      userId: window.localStorage.getItem("userId"),
+
+      // 日付によって変化
       selectedDate: "",
-      masks: ref({ modelValue: "YYYY-MM-DD" }),
-      records: [],
-      url: "",
-      attrs: ref([
-        {
-          key: "today",
-          dot: true,
-          dates: new Date(),
-        },
-      ]),
+      nowMonth: "",
+      recordsPerMonth: [],
+      recordsOnSelectedDate: [],
+      datesHasRecords: [],
+
+      // カレンダーの設定
+      masks: { modelValue: "YYYY-MM-DD" },
+      // attrs: {
+      //   highlight: true,
+      //   dates: [new Date(2024, 10, 2), new Date(2024, 10, 7)],
+      // },
+
+      date: new Date(2024, 10, 23),
     };
   },
 
   async mounted() {
+    // mountされたら現在の日にちと月を変数にセットしたい
     this.setDate();
-    await this.getRecords();
+    this.setMonth();
+    // 今月の記録を取得
+    await this.fetchAllRecordsPerMonth();
+    // await this.extractDateFromAllRecords();
+    // await this.setAttrsDate();
+    await this.extractRecordsOnSelectedDateFromRecords();
   },
 
   watch: {
-    selectedDate(newDate) {
-      this.getRecords();
+    //　日付を選択，月の変更で取得するデータを変える
+    selectedDate() {
+      this.extractRecordsOnSelectedDateFromRecords(); //recordsの中から取ってくるようにしたい
     },
+    // nowMonth() {
+    //   this.fetchAllRecordsPerMonth(); //月が替わるごとに全部フェッチしたい
+    // },
   },
 
   methods: {
     setDate() {
-      // 今日の日付をYYYY-MM-DD形式で取得
-      const today = new Date().toISOString().slice(0, 10);
-      this.selectedDate = today;
+      this.selectedDate = new Date().toISOString().slice(0, 10);
     },
 
-    isMyAlcohol(userId) {
-      return this.userId === userId;
+    setMonth() {
+      this.nowMonth = new Date().toISOString().slice(5, 7);
     },
 
-    checkLocalStrage() {
-      const userId = window.localStorage.getItem("userId");
-      const affilicationId = window.localStorage.getItem("affilicationId");
-      const token = window.localStorage.getItem("token");
-
-      if (userId && affilicationId && token) {
-        this.userId = window.localStorage.getItem("userId");
-        this.affilicationId = window.localStorage.getItem("affilicationId");
-        return true;
-      }
-      return false;
-    },
-
-    async getAlcoholRecords() {
-      if (this.isCallingApi) {
-        return;
-      }
-      this.isCallingApi = true;
-
+    async fetchAllRecordsPerMonth() {
       try {
         const res = await fetch(
-          `${baseUrl}/AlcoholIntakeRecords?userId=${this.userId}&date=${this.selectedDate}`,
+          `${baseUrl}/calendar?userId=${this.userId}&month=${this.nowMonth}`,
           {
             method: "GET",
             headers: {
@@ -136,48 +116,57 @@ export default {
           }
         );
 
-        const text = await res.text();
-        const jsonData = text ? JSON.parse(text) : {};
-
         if (!res.ok) {
           const errorMessage =
             jsonData.message ?? "エラーメッセージがありません";
           throw new Error(errorMessage);
         }
 
-        this.records = jsonData.records ?? [];
+        const text = await res.text();
+        this.recordsPerMonth = text ? JSON.parse(text) : {};
       } catch (e) {
         this.errorMsg = `飲酒記録取得時にエラーが発生しました: ${e.message}`;
-      } finally {
-        this.isCallingApi = false;
       }
     },
 
-    async getRecords() {
-      if (this.checkLocalStrage()) {
-        await this.getAlcoholRecords();
-      } else {
-        window.localStorage.clear();
-        this.$router.push({ name: "Login" });
+    // refを使っているから.valueで指定する必要あり
+    async extractRecordsOnSelectedDateFromRecords() {
+      const recordsInTheMonth = await this.recordsPerMonth;
+      const selectedDateRecords = [];
+      for (var i = 0; i < recordsInTheMonth.length; i++) {
+        if (recordsInTheMonth[i].date == this.selectedDate) {
+          selectedDateRecords.push(recordsInTheMonth[i]);
+        }
       }
+      this.recordsOnSelectedDate = selectedDateRecords;
+    },
+
+    async extractDateFromAllRecords() {
+      const recordsInTheMonth = await this.recordsPerMonth;
+      const datesHasRecords = [];
+      const seenDates = new Set();
+
+      recordsInTheMonth.forEach((entry) => {
+        if (!seenDates.has(entry.date)) {
+          seenDates.add(entry.date);
+          datesHasRecords.push({
+            year: Number(entry.date.slice(0, 4)),
+            month: Number(entry.date.slice(5, 7)),
+            date: Number(entry.date.slice(8, 10)),
+          });
+        }
+        this.datesHasRecords = datesHasRecords;
+      });
+    },
+
+    async setAttrsDate() {
+      const dates = await this.datesHasRecords;
+      dates.forEach((entry) => {
+        this.attrs.dates.push(new Date(entry.year, entry.month, entry.date));
+      });
     },
   },
 };
 </script>
 
-<style scoped>
-/* このコンポーネントだけに適用するCSSはここに記述する */
-.ui.main.container {
-  margin-bottom: 100px; /* メニューバーの高さと同じ値に設定 */
-  padding-bottom: 100px; /* メニューバーの高さを余白として追加 */
-}
-
-.ui.comments.divided.alcohol-list {
-  list-style-type: none;
-}
-
-.cal {
-  justify-content: center;
-  align-items: center;
-}
-</style>
+<style scoped></style>

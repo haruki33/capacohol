@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
+  <v-app>
     <Menu />
-  </div>
+  </v-app>
 </template>
 
 <script>
-import { RouterView } from "vue-router";
+// import { RouterView } from "vue-router";
 import Menu from "@/components/Menu.vue";
 
 export default {
